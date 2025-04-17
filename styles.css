@@ -2552,15 +2552,17 @@ footer {
         position: fixed;
         top: 0;
         right: -100%;
-        width: 80%;
-        max-width: 300px;
-        height: 100vh;
+        width: 70%; /* Zmenšeno z 80% */
+        max-width: 250px; /* Zmenšeno z 300px */
+        height: auto; /* Změněno z 100vh na auto */
+        max-height: 80vh; /* Omezení maximální výšky */
         background-color: var(--secondary-color);
         z-index: 1000;
         transition: right 0.3s ease;
         box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
-        padding: 60px 20px 20px;
+        padding: 60px 15px 15px; /* Zmenšeno odsazení */
         overflow-y: auto;
+        border-radius: 0 0 0 10px; /* Zaoblení levého dolního rohu */
     }
 
     .main-nav.active {
@@ -2573,16 +2575,16 @@ footer {
     }
 
     .main-nav li {
-        margin: 10px 0;
+        margin: 5px 0; /* Zmenšeno z 10px na 5px */
         width: 100%;
     }
 
     .main-nav a {
         display: block;
-        padding: 12px 15px;
+        padding: 8px 12px; /* Zmenšeno z 12px 15px na 8px 12px */
         width: 100%;
         border-radius: 4px;
-        font-size: 1.1rem;
+        font-size: 1rem; /* Zmenšeno z 1.1rem na 1rem */
     }
 
     main {
@@ -2707,13 +2709,17 @@ footer {
 
     /* Touch-friendly adjustments */
     button,
-    .main-nav a,
     .amount-btn,
     .app-download-btn,
     .simplified-checkbox-container,
     .play-button {
         min-height: 44px; /* Minimum touch target size */
         min-width: 44px;
+    }
+
+    /* Speciální výjimka pro položky menu */
+    .main-nav a {
+        min-height: 36px; /* Menší výška pro položky menu */
     }
 
     input[type="checkbox"],
@@ -2723,7 +2729,7 @@ footer {
 
     /* Increase spacing for better touch targets */
     .main-nav li {
-        margin: 8px 0;
+        margin: 3px 0; /* Ještě menší mezery pro menší obrazovky */
     }
 
     /* Adjust font sizes for better readability on small screens */

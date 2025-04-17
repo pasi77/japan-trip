@@ -146,6 +146,10 @@ body {
     overflow-x: hidden;
 }
 
+body.menu-open {
+    overflow: hidden; /* Prevent scrolling when mobile menu is open */
+}
+
 .page-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -2510,6 +2514,18 @@ footer {
     }
 }
 
+/* Mobile Menu Styles */
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 1001;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     header {
@@ -2517,31 +2533,60 @@ footer {
     }
 
     .header-container {
-        flex-direction: column;
-        text-align: center;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 15px;
     }
 
     .logo, header > .logo {
-        margin-bottom: 15px;
-        justify-content: center;
+        margin-bottom: 0;
         margin-right: 0;
     }
 
+    .mobile-menu-toggle {
+        display: block;
+    }
+
     .main-nav, header > .main-nav {
-        margin-left: 0;
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: var(--secondary-color);
+        z-index: 1000;
+        transition: right 0.3s ease;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+        padding: 60px 20px 20px;
+        overflow-y: auto;
+    }
+
+    .main-nav.active {
+        right: 0;
     }
 
     .main-nav ul {
-        justify-content: center;
-        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     .main-nav li {
-        margin: 5px;
+        margin: 10px 0;
+        width: 100%;
+    }
+
+    .main-nav a {
+        display: block;
+        padding: 12px 15px;
+        width: 100%;
+        border-radius: 4px;
+        font-size: 1.1rem;
     }
 
     main {
-        margin-top: 120px; /* Increase top margin for mobile to account for taller header */
+        margin-top: 80px; /* Adjusted for mobile header */
     }
 
     .countdown {
@@ -2555,6 +2600,22 @@ footer {
     .restaurant-image {
         max-width: 100%;
     }
+
+    /* Overlay for mobile menu */
+    .menu-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+
+    .menu-overlay.active {
+        display: block;
+    }
 }
 
 @media (max-width: 576px) {
@@ -2563,21 +2624,19 @@ footer {
     }
 
     main {
-        margin-top: 140px; /* Further increase for very small screens */
+        margin-top: 70px; /* Adjusted for mobile header */
+        padding: 0 10px 10px;
     }
 
     section {
-        padding: 20px;
+        padding: 15px;
+        margin-bottom: 20px;
     }
 
-    .main-nav a {
-        padding: 5px 8px;
-        font-size: 0.85rem;
-    }
-
-    header > .main-nav ul,
-    .header-container .main-nav ul {
-        gap: 2px;
+    section h2 {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
     }
 
     .trip-overview {
@@ -2586,6 +2645,149 @@ footer {
 
     .phrase-list {
         grid-template-columns: 1fr;
+    }
+
+    /* Hero section adjustments */
+    .hero-section {
+        height: 400px;
+    }
+
+    .hero-title {
+        font-size: 2.2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.4rem;
+    }
+
+    /* Currency converter adjustments */
+    .converter-body-wide {
+        flex-direction: column;
+    }
+
+    .converter-left {
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        padding-right: 0;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+    }
+
+    .converter-right {
+        padding-left: 0;
+    }
+
+    .common-amounts-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* Distance cards adjustments */
+    .distances-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* App cards adjustments */
+    .app-card {
+        flex-direction: column;
+    }
+
+    .app-icon {
+        margin-bottom: 15px;
+        margin-right: 0;
+        align-self: center;
+    }
+
+    /* Subnav adjustments */
+    .subnav-container {
+        display: none; /* Hide subnav on very small screens */
+    }
+
+    /* Touch-friendly adjustments */
+    button,
+    .main-nav a,
+    .amount-btn,
+    .app-download-btn,
+    .simplified-checkbox-container,
+    .play-button {
+        min-height: 44px; /* Minimum touch target size */
+        min-width: 44px;
+    }
+
+    input[type="checkbox"],
+    input[type="radio"] {
+        transform: scale(1.2); /* Make checkboxes larger */
+    }
+
+    /* Increase spacing for better touch targets */
+    .main-nav li {
+        margin: 8px 0;
+    }
+
+    /* Adjust font sizes for better readability on small screens */
+    p, li, td, th {
+        font-size: 16px; /* Minimum readable font size */
+    }
+
+    /* Adjust form elements for touch */
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    select {
+        height: 44px;
+        font-size: 16px; /* Prevents iOS zoom on focus */
+        padding: 10px;
+    }
+}
+
+/* Tablet-specific adjustments */
+@media (min-width: 577px) and (max-width: 991px) {
+    .hero-section {
+        height: 500px;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.6rem;
+    }
+
+    .food-grid {
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    }
+
+    .converter-card-wide {
+        height: auto;
+    }
+
+    .converter-body-wide {
+        flex-direction: column;
+    }
+
+    .converter-left {
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        padding-right: 0;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+    }
+
+    .converter-right {
+        padding-left: 0;
+    }
+
+    .app-card {
+        flex-direction: column;
+    }
+
+    .app-icon {
+        margin-bottom: 15px;
+        margin-right: 0;
+        align-self: center;
     }
 }
 

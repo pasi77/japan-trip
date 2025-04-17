@@ -2748,6 +2748,7 @@ footer {
         max-height: 250px; /* Zmenšeno z 300px */
         overflow-y: auto;
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1001; /* Zvýšeno nad ovládací prvky mapy (leaflet má z-index 1000) */
     }
 
     .subnav-container.active {
@@ -2925,4 +2926,45 @@ footer {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+}
+
+/* Speciální styl pro submenu na stránce praktické informace */
+@media (max-width: 768px) {
+    .practical-info-subnav {
+        display: flex;
+        flex-wrap: wrap;
+        max-height: none;
+        overflow-y: visible;
+        position: static;
+        margin-top: 85px;
+        width: 100%;
+        box-shadow: none;
+        border-bottom: none;
+    }
+
+    .practical-info-subnav .subnav {
+        width: 100%;
+    }
+
+    .practical-info-subnav .subnav ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 5px;
+    }
+
+    .practical-info-subnav .subnav li {
+        width: auto;
+        margin: 3px;
+    }
+
+    .practical-info-subnav .subnav a {
+        white-space: nowrap;
+        font-size: 0.8rem;
+        padding: 5px 8px;
+    }
+
+    .practical-info-subnav ~ main {
+        margin-top: 10px;
+    }
 }

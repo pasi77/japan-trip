@@ -1,8 +1,17 @@
 // Samostatný JavaScript soubor pro ovládání hamburger menu
-// Okamžitá inicializace hamburger menu bez čekání na DOMContentLoaded
-(function() {
+// Tento soubor slouží jako záložní pro případ, že by script.js nebyl načten
+// Kontrolujeme, zda již existuje funkce setupMobileMenu v globálním kontextu
+if (typeof window.setupMobileMenuCalled === 'undefined') {
+    // Nastavíme globální proměnnou, abychom věděli, že menu.js byl zavolán
+    window.menuJsLoaded = true;
+
     // Funkce pro inicializaci mobilního menu
     function initMobileMenu() {
+        // Kontrola, zda již nebylo menu inicializováno pomocí script.js
+        if (window.setupMobileMenuCalled) {
+            return;
+        }
+
         const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
         const mainNav = document.getElementById('main-nav');
         const menuOverlay = document.getElementById('menu-overlay');
@@ -53,4 +62,4 @@
 
     // A také po načtení DOMContentu pro jistotu
     document.addEventListener('DOMContentLoaded', initMobileMenu);
-})();
+}

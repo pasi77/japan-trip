@@ -248,6 +248,7 @@ header > .main-nav {
     list-style: none;
     padding: 0;
     margin: 0;
+    justify-content: flex-end; /* Zarovnání zprava, stejně jako u subnav */
 }
 
 .main-nav li {
@@ -282,6 +283,35 @@ header > .main-nav {
     width: 100%;
     z-index: 999;
     border-top: 1px solid rgba(255, 255, 255, 0.1); /* Jemná světlá linka nahoře pro efekt stínu */
+}
+
+/* Tlačítko pro zobrazení submenu - skryto na větších obrazovkách */
+.submenu-toggle {
+    display: none;
+    position: fixed;
+    top: 51px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 10px 15px;
+    background-color: #f0f0f0;
+    color: var(--secondary-color);
+    font-weight: 500;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    cursor: pointer;
+    z-index: 998;
+    transition: all 0.3s ease;
+}
+
+.submenu-toggle i {
+    float: right;
+    transition: transform 0.3s ease;
+}
+
+.submenu-toggle.active i {
+    transform: rotate(180deg);
 }
 
 .subnav {
@@ -2702,9 +2732,83 @@ footer {
         align-self: center;
     }
 
-    /* Subnav adjustments */
+    /* Subnav adjustments for mobile */
     .subnav-container {
-        display: none; /* Hide subnav on very small screens */
+        position: fixed;
+        top: 85px; /* Pod tlačítkem submenu */
+        background-color: #f0f0f0;
+        border-bottom: 1px solid #ddd;
+        display: none;
+        transition: all 0.3s ease;
+        max-height: 300px;
+        overflow-y: auto;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .subnav-container.active {
+        display: block;
+    }
+
+    .subnav ul {
+        flex-direction: column;
+        padding: 5px 0;
+    }
+
+    .subnav li {
+        margin: 0;
+        width: 100%;
+    }
+
+    .subnav a {
+        padding: 8px 15px;
+        border-bottom: none;
+        border-left: 3px solid transparent;
+        font-size: 0.9rem;
+    }
+
+    .subnav a:hover,
+    .subnav a.active {
+        border-bottom-color: transparent;
+        border-left-color: var(--primary-color);
+        background-color: rgba(233, 69, 96, 0.1);
+    }
+
+    /* Tlačítko pro zobrazení submenu */
+    .submenu-toggle {
+        display: block;
+        position: fixed;
+        top: 51px;
+        left: 0;
+        right: 0;
+        width: 100%;
+        padding: 8px 15px;
+        background-color: #f0f0f0;
+        color: var(--secondary-color);
+        font-weight: 500;
+        text-align: left;
+        border: none;
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+        z-index: 998;
+        transition: all 0.3s ease;
+    }
+
+    .submenu-toggle:hover {
+        background-color: #e5e5e5;
+    }
+
+    .submenu-toggle i {
+        float: right;
+        transition: transform 0.3s ease;
+    }
+
+    .submenu-toggle.active i {
+        transform: rotate(180deg);
+    }
+
+    /* Adjust main content to account for submenu toggle button */
+    main {
+        margin-top: 85px; /* 51px (header) + 34px (submenu toggle) */
     }
 
     /* Touch-friendly adjustments */

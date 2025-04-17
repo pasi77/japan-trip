@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jídlo - Japonský cestovní průvodce</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scrolling for subnav links
+            document.querySelectorAll('.subnav a').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+
+                    if (targetElement) {
+                        // Adjust offset for fixed header and subnav
+                        const offset = 90;
+                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - offset;
+
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+
+                        // Update active class in subnav
+                        document.querySelectorAll('.subnav a').forEach(a => a.classList.remove('active'));
+                        this.classList.add('active');
+                    }
+                });
+            });
+
+            // Highlight active section on scroll
+            window.addEventListener('scroll', function() {
+                const scrollPosition = window.scrollY;
+
+                // Get all sections
+                const sections = [
+                    document.getElementById('traditional-food'),
+                    document.getElementById('wagyu'),
+                    document.getElementById('regional-food'),
+                    document.getElementById('drinks'),
+                    document.getElementById('dining-tips')
+                ];
+
+                // Find the current section
+                let currentSection = null;
+
+                sections.forEach(section => {
+                    if (section) {
+                        const sectionTop = section.offsetTop - 100;
+                        const sectionBottom = sectionTop + section.offsetHeight;
+
+                        if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                            currentSection = section.id;
+                        }
+                    }
+                });
+
+                // Update active class in subnav
+                if (currentSection) {
+                    document.querySelectorAll('.subnav a').forEach(a => {
+                        a.classList.remove('active');
+                        if (a.getAttribute('href') === '#' + currentSection) {
+                            a.classList.add('active');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="page-container">
+        <header>
+            <div class="header-container">
+                <div class="logo">
+                    <img src="https://cdn-icons-png.freepik.com/512/7848/7848088.png" alt="Japonsko logo - torii brána">
+                    <h1>Japonsko 2025</h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">Úvod</a></li>
+                        <li><a href="itinerary.html">Itinerář</a></li>
+                        <li><a href="budget.html">Rozpočet</a></li>
+                        <li><a href="practical-info.html">Praktické informace</a></li>
+                        <li><a href="language.html">Jazyk</a></li>
+                        <li><a href="maps-japan-leaflet.html">Mapy</a></li>
+                        <li><a href="weather.html">Počasí</a></li>
+                        <li><a href="food.html" class="active">Jídlo</a></li>
+                        <li><a href="links.html">Odkazy</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <div class="subnav-container">
+            <nav class="subnav">
+                <ul>
+                    <li><a href="#traditional-food" class="active"><i class="fas fa-utensils"></i> Tradiční pokrmy</a></li>
+                    <li><a href="#wagyu"><i class="fas fa-drumstick-bite"></i> Wagyu hovězí</a></li>
+                    <li><a href="#regional-food"><i class="fas fa-map-marker-alt"></i> Regionální speciality</a></li>
+                    <li><a href="#drinks"><i class="fas fa-glass-cheers"></i> Nápoje</a></li>
+                    <li><a href="#dining-tips"><i class="fas fa-info-circle"></i> Tipy pro stravování</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <main>
+            <section class="food-section">
+                <h2>Japonská kuchyně</h2>
+                <p class="section-intro">Japonsko je rájem pro milovníky jídla. Objevte tradiční japonské pokrmy, které byste měli během své cesty ochutnat, a tipy na restaurace s přijatelnými cenami.</p>
+
+                <!-- Tradiční japonské pokrmy -->
+                <div class="food-category" id="traditional-food">
+                    <h3>Tradiční japonské pokrmy</h3>
+                    <p>Japonská kuchyně je známá svou čerstvostí, prezentací a jednoduchostí. Zde jsou některé tradiční pokrmy, které byste měli během své cesty ochutnat:</p>
+
+                    <div class="food-grid">
+                        <div class="food-item">
+                            <div class="food-image">
+                                <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHN1c2hpfGVufDB8fDB8fHww" alt="Sushi">
+                            </div>
+                            <div class="food-info">
+                                <h4>Sushi</h4>
+                                <p>Kombinace ochuceného rýže s různými druhy syrových ryb a mořských plodů. Nejběžnější typy jsou nigiri (rýže s plátkem ryby navrchu) a maki (rolky zabalené v mořské řase).</p>
+                                <p><strong>Kde ochutnat:</strong> Kaiten-zushi (běžící pás) restaurace nabízejí cenově dostupné sushi od 100 JPY za kousek.</p>
+                                <p><strong>Doporučení:</strong> Sushizanmai v Tokiu, Musashi Sushi v Kjótu</p>
+                            </div>
+                        </div>
+
+                        <div class="food-item">
+                            <div class="food-image">
+                                <img src="https://images.unsplash.com/photo-1638866281450-3933540af86a?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHJhbWVufGVufDB8fDB8fHww" alt="Ramen">
+                            </div>
+                            <div class="food-info">
+                                <h4>Ramen</h4>
+                                <p>Polévka s nudlemi, masem (obvykle vepřovým), vajíčkem a zeleninou. Existuje mnoho regionálních variant s různými druhy vývarů (miso, shoyu, tonkotsu, shio).</p>
+                                <p><strong>Kde ochutnat:</strong> Malé ramen obchody (ramen-ya) nabízejí misky od 800 JPY.</p>
+                                <p><strong>Doporučení:</strong> Ichiran Ramen (celostátní řetězec), Ippudo (Fukuoka)</p>
+                            </div>
+                        </div>
+
+                        <div class="food-item">
+                            <div class="food-image">
+                                <img src="https://images.unsplash.com/photo-1593357849627-cbbc9fda6b05?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGVtcHVyYXxlbnwwfHwwfHx8MA%3D%3D" alt="Tempura">
+                            </div>
+                            <div class="food-info">
+                                <h4>Tempura</h4>
+                                <p>Krevety, ryby a zelenina obalené v lehkém těstíčku a smažené. Podává se s dipping omáčkou a často jako součást set menu (teishoku).</p>
+                                <p><strong>Kde ochutnat:</strong> Tempura restaurace nabízejí set menu od 1,500 JPY.</p>
+                                <p><strong>Doporučení:</strong> Tempura Tsunahachi v Tokiu, Tempura Yasaka v Kjótu</p>
+                            </div>
+                        </div>
+
+                        <div class="food-item">
+                            <div class="food-image">
+                                <img src="https://plus.unsplash.com/premium_photo-1722593856486-5f87f9fca308?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8b2tvbm9taXlha2l8ZW58MHx8MHx8fDA%3D" alt="Okonomiyaki">
+                            </div>
+                            <div class="food-info">
+                                <h4>Okonomiyaki</h4>
+                                <p>Japonská "palačinka" obsahující zelí, maso nebo mořské plody, vajíčka a další ingredience podle vaší volby. Navrchu je speciální omáčka, majonéza a sušené rybí vločky.</p>
+                                <p><strong>Kde ochutnat:</strong> Specializované okonomiyaki restaurace, kde si můžete připravit vlastní na grilu u stolu. Ceny od 800 JPY.</p>
+                                <p><strong>Doporučení:</strong> Okonomimura v Hirošimě, Chibo v Ósace</p>
+                            </div>
+                        </div>
+
+                        <div class="food-item">
+                            <div class="food-image">
+                                <img src="https://images.unsplash.com/photo-1652752731860-ef0cf518f13a?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFrb3lha2l8ZW58MHx8MHx8fDA%3D" alt="Takoyaki">
+                            </div>
+                            <div class="food-info">
+                                <h4>Takoyaki</h4>
+                                <p>Kulaté knedlíčky plněné kousky chobotnice, smažené na speciální pánvi. Podávají se s takoyaki omáčkou, majonézou a posypané nori a katsuobushi (sušené rybí vločky).</p>
+                                <p><strong>Kde ochutnat:</strong> Pouliční stánky a specializované obchody. Cena za porci (6-8 kusů) od 500 JPY.</p>
+                                <p><strong>Doporučení:</strong> Takoyaki Wanaka v Ósace, Gindaco (celostátní řetězec)</p>
+                            </div>
+                        </div>
+
+                        <div class="food-item">
+                            <div class="food-image">
+                                <img src="https://images.unsplash.com/photo-1707201124182-099f3d98bb90?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8dWRvbnxlbnwwfHwwfHx8MA%3D%3D" alt="Udon">
+                            </div>
+                            <div class="food-info">
+                                <h4>Udon</h4>
+                                <p>Silné pšeničné nudle podávané v horkém vývaru nebo za studena s dipping omáčkou. Často doplněné tempurou, tofu nebo masem.</p>
+                                <p><strong>Kde ochutnat:</strong> Specializované udon restaurace nabízejí misky od 500 JPY.</p>
+                                <p><strong>Doporučení:</strong> Marugame Seimen (celostátní řetězec), Sanuki Udon v Kagawě</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wagyu -->
+                <div class="food-category" id="wagyu">
+                    <h3>Wagyu - japonské hovězí</h3>
+                    <p>Wagyu je světoznámé japonské hovězí maso s vysokým obsahem tuku, které je mimořádně jemné a šťavnaté. Nejznámější druhy jsou Kobe, Matsusaka a Omi.</p>
+
+                    <div class="food-item full-width">
+                        <div class="food-image">
+                            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Wagyu hovězí">
+                        </div>
+                        <div class="food-info">
+                            <h4>All-you-can-eat Wagyu restaurace</h4>
+                            <p>Ochutnat pravé wagyu hovězí může být drahé, ale existují cenově dostupnější all-you-can-eat (tabehoudai) restaurace, kde si můžete vychutnat kvalitní wagyu za rozumnou cenu.</p>
+
+                            <h5>Doporučené all-you-can-eat Wagyu restaurace:</h5>
+                            <ul>
+                                <li><strong>Tajimaya</strong> (Tokio, Ósaka) - All-you-can-eat wagyu yakiniku od 3,500 JPY na osobu</li>
+                                <li><strong>Gyu-Kaku</strong> (celostátní řetězec) - Nabízí all-you-can-eat menu od 3,000 JPY na osobu</li>
+                                <li><strong>Yakiniku Like</strong> (celostátní řetězec) - Cenově dostupný yakiniku od 1,000 JPY</li>
+                                <li><strong>Matsusaka Yakiniku M</strong> (Ósaka) - Specializuje se na Matsusaka hovězí, all-you-can-eat menu od 4,000 JPY</li>
+                            </ul>
+
+                            <h5>Tipy pro návštěvu yakiniku restaurace:</h5>
+                            <ul>
+                                <li>All-you-can-eat menu obvykle mají časový limit (60-120 minut)</li>
+                                <li>Některé restaurace mají příplatek za nevyjedené jídlo, abyste neplýtvali</li>
+                                <li>Rezervace je doporučena, zejména ve večerních hodinách a o víkendech</li>
+                                <li>Maso si grilujete sami na grilu zabudovaném ve stole</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Regionální speciality -->
+                <div class="food-category" id="regional-food">
+                    <h3>Regionální speciality</h3>
+                    <p>Každý region Japonska má své vlastní kulinářské speciality. Zde jsou některé pokrmy, které byste měli ochutnat v místech, která navštívíte:</p>
+
+                    <div class="food-grid">
+                        <div class="food-item">
+                            <div class="food-image">
+                                <img src="https://images.unsplash.com/photo-1590253230532-a67f6bc61c9e?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fG9zYWthfGVufDB8fDB8fHww" alt="Osaka night view">
+                            </div>
+                            <div class="food-info">
+                                <h4>Ósaka</h4>
+                                <ul>
+                                    <li><strong>Takoyaki</strong> - Kulaté knedlíčky s chobotnicí</li>
+                                    <li><strong>Okonomiyaki</strong> - Japonská "palačinka"</li>
+                                    <li><strong>Kushikatsu</strong> - Obalované a smažené maso a zelenina na špejli</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="food-item">
+                            <div class="food-image">
+                                <img src="https://www.livingstone.cz/upload/responsive/kraken/fotogalerie/Fotogalerie-zajezdy/260_Japonsko/japonsko_03.jpg" alt="Kyoto temple">
+                            </div>
+                            <div class="food-info">
+                                <h4>Kjóto</h4>
+                                <ul>
+                                    <li><strong>Yudofu</strong> - Vařené tofu v dashi vývaru</li>
+                                    <li><strong>Kaiseki ryori</strong> - Tradiční více-chodové menu</li>
+                                    <li><strong>Yatsuhashi</strong> - Sladké rýžové koláčky s různými náplněmi</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="food-item">
+                            <div class="food-image">
+                                <img src="https://images.unsplash.com/photo-1504109586057-7a2ae83d1338?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8aGlyb3NoaW1hfGVufDB8fDB8fHww" alt="Hiroshima Peace Memorial">
+                            </div>
+                            <div class="food-info">
+                                <h4>Hirošima</h4>
+                                <ul>
+                                    <li><strong>Hiroshima-style Okonomiyaki</strong> - Vrstvená verze s nudlemi</li>
+                                    <li><strong>Anago-meshi</strong> - Rýže s úhoři</li>
+                                    <li><strong>Momiji manju</strong> - Koláčky ve tvaru javorového listu</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="food-item">
+                            <div class="food-image">
+                                <img src="https://media.istockphoto.com/id/644263058/photo/higashi-chaya-district.jpg?s=612x612&w=0&k=20&c=lGw8K6Nzeebc8z5HrXzX6xQUkIXu6Lv9PvBArsJtwnw=" alt="Kanazawa Higashi Chaya district">
+                            </div>
+                            <div class="food-info">
+                                <h4>Kanazawa</h4>
+                                <ul>
+                                    <li><strong>Kaga ryori</strong> - Tradiční kuchyně regionu Kaga</li>
+                                    <li><strong>Jibuni</strong> - Dušená kachna v sójové omáčce</li>
+                                    <li><strong>Kaisen-don</strong> - Miska rýže s čerstvými mořskými plody</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="food-item">
+                            <div class="food-image">
+                                <img src="https://images.unsplash.com/photo-1469998265221-245c7148df5d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bmFnYW5vfGVufDB8fDB8fHww" alt="Nagano mountains">
+                            </div>
+                            <div class="food-info">
+                                <h4>Nagano</h4>
+                                <ul>
+                                    <li><strong>Shinshu soba</strong> - Pohankové nudle</li>
+                                    <li><strong>Oyaki</strong> - Plněné knedlíčky z pohankové mouky</li>
+                                    <li><strong>Nozawana-zuke</strong> - Nakládaná listová zelenina</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="food-item">
+                            <div class="food-image">
+                                <img src="https://plus.unsplash.com/premium_photo-1661914240950-b0124f20a5c1?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dG9reW98ZW58MHx8MHx8fDA%3D" alt="Tokyo skyline">
+                            </div>
+                            <div class="food-info">
+                                <h4>Tokio</h4>
+                                <ul>
+                                    <li><strong>Edomae sushi</strong> - Tradiční tokijské sushi</li>
+                                    <li><strong>Monjayaki</strong> - Tekutější verze okonomiyaki</li>
+                                    <li><strong>Tsukiji/Toyosu Market</strong> - Čerstvé mořské plody</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nápoje -->
+                <div class="food-category" id="drinks">
+                    <h3>Japonské nápoje</h3>
+                    <p>Japonsko nabízí mnoho tradičních i moderních nápojů, které stojí za ochutnání:</p>
+
+                    <div class="food-grid">
+                        <div class="food-item">
+                            <div class="food-image">
+                                <img src="https://images.unsplash.com/photo-1571762450239-f0f047321444?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c2FrZXxlbnwwfHwwfHx8MA%3D%3D" alt="Sake">
+                            </div>
+                            <div class="food-info">
+                                <h4>Sake (Nihonshu)</h4>
+                                <p>Tradiční japonský rýžový alkohol. Existuje mnoho druhů od suchých po sladké, podávané teplé nebo studené podle typu a sezóny.</p>
+                                <p><strong>Kde ochutnat:</strong> Specializované sake bary, izakaya (japonské hospody) nebo sake degustace v pivovarech.</p>
+                            </div>
+                        </div>
+
+                        <div class="food-item">
+                            <div class="food-image">
+                                <img src="https://plus.unsplash.com/premium_photo-1694540110881-84add98c0a75?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fG1hdGNoYSUyMHRlYXxlbnwwfHwwfHx8MA%3D%3D" alt="Matcha">
+                            </div>
+                            <div class="food-info">
+                                <h4>Matcha</h4>
+                                <p>Mletý zelený čaj s bohatou chutí a vysokým obsahem antioxidantů. Tradiční součást čajového obřadu, ale dnes populární i v moderních nápojích a dezertech.</p>
+                                <p><strong>Kde ochutnat:</strong> Tradiční čajovny, specializované matcha kavárny nebo čajové zahrady u chrámů.</p>
+                            </div>
+                        </div>
+
+                        <div class="food-item">
+                            <div class="food-image">
+                                <img src="https://opive.sk/wp-content/uploads/2017/03/Asahi-Beer.jpg" alt="Japonské pivo Asahi">
+                            </div>
+                            <div class="food-info">
+                                <h4>Japonské pivo</h4>
+                                <p>Japonsko má několik velkých pivovarů (Asahi, Kirin, Sapporo, Suntory) i rostoucí scénu řemeslných piv. Japonská piva jsou obvykle lehká a osvěžující.</p>
+                                <p><strong>Kde ochutnat:</strong> Izakaya, pivní zahrady (v létě), specializované pivní bary nebo přímo v pivovarech.</p>
+                            </div>
+                        </div>
+
+                        <div class="food-item">
+                            <div class="food-image">
+                                <img src="https://www.kyosushi.com/wp-content/uploads/2024/12/ptmp-ULigrYs0-Xk-unsplash-scaled.jpg" alt="Umeshu - japonský švestkový likér">
+                            </div>
+                            <div class="food-info">
+                                <h4>Umeshu</h4>
+                                <p>Sladký likér vyrobený z japonských švestek (ume) macerovaných v shochu nebo sake. Má ovocnou chuť a obvykle nižší obsah alkoholu.</p>
+                                <p><strong>Kde ochutnat:</strong> Izakaya, bary nebo specializované obchody s alkoholem. Podává se čisté, s ledem nebo ředěné sodou.</p>
+                            </div>
+                        </div>
+
+                        <div class="food-item">
+                            <div class="food-image">
+                                <img src="https://images.unsplash.com/photo-1663870316229-cb3986d34e8c?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Ramune - japonský nápoj s mramorovou kuličkou">
+                            </div>
+                            <div class="food-info">
+                                <h4>Ramune</h4>
+                                <p>Ikonický japonský nealkoholický nápoj v unikátní lahvi s mramorovou kuličkou. K dispozici v mnoha příchutích, nejpopulárnější je původní citronová.</p>
+                                <p><strong>Kde ochutnat:</strong> Automaty, konbini (samoobsluhy), festivaly a pouliční stánky.</p>
+                            </div>
+                        </div>
+
+                        <div class="food-item">
+                            <div class="food-image">
+                                <img src="https://st.depositphotos.com/1001564/53471/i/450/depositphotos_534718678-stock-photo-japanese-vending-machine.jpg" alt="Japonský automat na nápoje">
+                            </div>
+                            <div class="food-info">
+                                <h4>Nápoje z automatů</h4>
+                                <p>Japonsko je známé svými všudypřítomnými automaty na nápoje. Vyzkoušejte některé unikátní japonské nápoje jako Royal Milk Tea, Calpis, různé druhy kávy v plechovce (hot/cold) nebo sezónní speciality.</p>
+                                <p><strong>Kde ochutnat:</strong> Automaty jsou doslova na každém rohu, nabízejí teplé i studené nápoje za ceny od 100-160 JPY.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tipy pro stravování -->
+                <div class="food-category" id="dining-tips">
+                    <h3>Tipy pro stravování v Japonsku</h3>
+
+                    <div class="tips-grid">
+                        <div class="tip-item">
+                            <div class="tip-icon">
+                                <i class="fas fa-yen-sign"></i>
+                            </div>
+                            <div class="tip-content">
+                                <h4>Cenově dostupné možnosti</h4>
+                                <ul>
+                                    <li><strong>Konbini (samoobsluhy)</strong> - 7-Eleven, Lawson, Family Mart nabízejí překvapivě kvalitní a čerstvé jídlo za nízké ceny (od 300 JPY)</li>
+                                    <li><strong>Kaiten-zushi (běžící pás sushi)</strong> - Cenově dostupné sushi od 100 JPY za kousek</li>
+                                    <li><strong>Řetězce rychlého občerstvení</strong> - Yoshinoya, Matsuya, Sukiya nabízejí misky s rýží a masem (gyudon) od 500 JPY</li>
+                                    <li><strong>Ramen obchody</strong> - Misky ramenu od 800 JPY</li>
+                                    <li><strong>Depachika (potravinové haly v suterénech obchodních domů)</strong> - Skvělé pro oběd, zejména večer před zavírací dobou, kdy nabízejí slevy</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="tip-item">
+                            <div class="tip-icon">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                            <div class="tip-content">
+                                <h4>Etiketa při jídle</h4>
+                                <ul>
+                                    <li>Před jídlem řekněte "Itadakimasu" (něco jako "Dobrou chuť")</li>
+                                    <li>Po jídle můžete říct "Gochisosama deshita" (poděkování za jídlo)</li>
+                                    <li>Je v pořádku srkat nudle (dokonce je to považováno za kompliment kuchaři)</li>
+                                    <li>Hůlky nikdy nezapichujte do rýže (připomíná to pohřební rituál)</li>
+                                    <li>Nepředávejte jídlo z hůlek na hůlky (také spojeno s pohřebními rituály)</li>
+                                    <li>V Japonsku se nedává spropitné</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="tip-item">
+                            <div class="tip-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="tip-content">
+                                <h4>Jak najít dobré restaurace</h4>
+                                <ul>
+                                    <li>Dlouhé fronty často znamenají dobré jídlo</li>
+                                    <li>Restaurace s plastovými modely jídel ve výloze jsou obvykle přátelské k turistům</li>
+                                    <li>Používejte aplikace jako Tabelog nebo Google Maps pro recenze</li>
+                                    <li>Malé restaurace s omezeným menu často nabízejí nejlepší kvalitu</li>
+                                    <li>Restaurace v blízkosti turistických atrakcí mohou být dražší a méně autentické</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="tip-item">
+                            <div class="tip-icon">
+                                <i class="fas fa-allergies"></i>
+                            </div>
+                            <div class="tip-content">
+                                <h4>Dietní omezení a alergie</h4>
+                                <ul>
+                                    <li>Vegetariánství a veganství není v Japonsku příliš rozšířené</li>
+                                    <li>Dashi (rybí vývar) je základem mnoha pokrmů, i když vypadají vegetariánsky</li>
+                                    <li>Stáhněte si karty s alergeny v japonštině, které můžete ukázat v restauracích</li>
+                                    <li>Buddhistické chrámové kuchyně (shojin ryori) nabízejí vegetariánské a veganské možnosti</li>
+                                    <li>Aplikace jako Happy Cow mohou pomoci najít vegetariánské/veganské restaurace</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Japonský cestovní průvodce</p>
+        </footer>
+    </div>
+</body>
+</html>
+

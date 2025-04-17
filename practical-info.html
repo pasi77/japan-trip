@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Praktické informace - Japonský cestovní průvodce</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="script.js"></script>
+    <script>
+        function playPhrase(phrase) {
+            // Encode the phrase for URL
+            const encodedPhrase = encodeURIComponent(phrase);
+            // Create Google TTS URL
+            const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=ja&q=${encodedPhrase}`;
+            // Create audio element
+            const audio = new Audio(audioUrl);
+            // Play the audio
+            audio.play();
+        }
+    </script>
+</head>
+<body>
+    <div class="page-container">
+        <header>
+            <div class="header-container">
+                <div class="logo">
+                    <img src="https://cdn-icons-png.freepik.com/512/7848/7848088.png" alt="Japonsko logo - torii brána">
+                    <h1>Japonsko 2025</h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">Úvod</a></li>
+                        <li><a href="itinerary.html">Itinerář</a></li>
+                        <li><a href="budget.html">Rozpočet</a></li>
+                        <li><a href="practical-info.html" class="active">Praktické informace</a></li>
+                        <li><a href="language.html">Jazyk</a></li>
+                        <li><a href="maps-japan-leaflet.html">Mapy</a></li>
+                        <li><a href="weather.html">Počasí</a></li>
+                        <li><a href="food.html">Jídlo</a></li>
+                        <li><a href="links.html">Odkazy</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <div class="subnav-container">
+            <nav class="subnav">
+                <ul>
+                    <li><a href="#documents-section"><i class="fas fa-passport"></i> Cestovní doklady</a></li>
+                    <li><a href="#money-section"><i class="fas fa-yen-sign"></i> Peníze a platby</a></li>
+                    <li><a href="#transport-section"><i class="fas fa-train"></i> Doprava</a></li>
+                    <li><a href="#accommodation-section"><i class="fas fa-hotel"></i> Ubytování</a></li>
+                    <li><a href="#internet-section"><i class="fas fa-wifi"></i> Internet</a></li>
+                    <li><a href="#health-section"><i class="fas fa-first-aid"></i> Zdraví</a></li>
+                    <li><a href="#etiquette-section"><i class="fas fa-hands"></i> Etiketa</a></li>
+                    <li><a href="#weather-section"><i class="fas fa-cloud-sun"></i> Počasí</a></li>
+                    <li><a href="#electricity-section"><i class="fas fa-plug"></i> Zásuvky</a></li>
+                    <li><a href="#emergency-section"><i class="fas fa-phone-alt"></i> Kontakty</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <main>
+            <section class="practical-info-section">
+                <h2>Praktické informace</h2>
+
+                <!-- Cestovní doklady -->
+                <div class="info-card" id="documents-section">
+                    <div class="info-header">
+                        <h3><i class="fas fa-passport"></i> Cestovní doklady</h3>
+                    </div>
+                    <div class="info-content">
+
+                        <ul>
+                            <li><strong>Pas:</strong> Platnost minimálně 6 měsíců po plánovaném návratu z Japonska</li>
+                            <li><strong>Vízum:</strong> Občané ČR nepotřebují vízum pro pobyt do 90 dnů</li>
+                            <li><strong>Vstupní formulář:</strong> Vyplňuje se při příletu do Japonska</li>
+                            <li><strong>Celní prohlášení:</strong> Vyplňuje se při příletu do Japonska</li>
+                            <li><strong>Kopie dokladů:</strong> Doporučujeme mít kopie všech důležitých dokumentů v elektronické i tištěné podobě</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Peníze a platby -->
+                <div class="info-card" id="money-section">
+                    <div class="info-header">
+                        <h3><i class="fas fa-yen-sign"></i> Peníze a platby</h3>
+                    </div>
+                    <div class="info-content">
+                        <ul>
+                            <li><strong>Měna:</strong> Japonský jen (JPY, ¥)</li>
+                            <li><strong>Směnný kurz:</strong> 1 EUR ≈ 165 JPY, 1 CZK ≈ 6,5 JPY (k červnu 2024)</li>
+                            <li><strong>Hotovost:</strong> Japonsko je stále z velké části hotovostní společnost, mějte vždy u sebe dostatek hotovosti</li>
+                            <li><strong>Platební karty:</strong> Mezinárodní karty (Visa, Mastercard) jsou akceptovány v hotelech, větších obchodech a restauracích, ale ne všude</li>
+                            <li><strong>Bankomaty:</strong> Mezinárodní karty fungují především v bankomatech 7-Eleven (Seven Bank), Japan Post Bank a v bankomatech označených symbolem "International ATM"</li>
+                            <li><strong>Směna peněz:</strong> Nejlepší kurzy nabízejí banky a směnárny na letišti, v centrech měst nebo větší hotely</li>
+                            <li><strong>Spropitné:</strong> V Japonsku se nedává, může být dokonce považováno za urážlivé</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Doprava -->
+                <div class="info-card" id="transport-section">
+                    <div class="info-header">
+                        <h3><i class="fas fa-train"></i> Doprava</h3>
+                    </div>
+                    <div class="info-content">
+                        <h4>Japan Rail Pass</h4>
+                        <ul>
+                            <li><strong>Cena (21 dní):</strong>
+                                <ul>
+                                    <li>Dospělý (12+ let): 85,800 JPY (≈ 13,200 CZK)</li>
+                                    <li>Dítě (6-11 let): 42,900 JPY (≈ 6,600 CZK)</li>
+                                </ul>
+                            </li>
+                            <li><strong>Kde koupit:</strong> Musí být zakoupen před příjezdem do Japonska (online nebo přes cestovní kancelář)</li>
+                            <li><strong>Aktivace:</strong> Po příjezdu do Japonska na letišti nebo na hlavních vlakových nádražích</li>
+                            <li><strong>Platnost:</strong> 21 po sobě jdoucích dní od data aktivace</li>
+                            <li><strong>Co pokrývá:</strong> Všechny vlaky JR včetně většiny Shinkansen (kromě Nozomi a Mizuho), JR autobusy, ferry do Miyajimy</li>
+                        </ul>
+
+                        <h4>IC karty (Suica, ICOCA, Pasmo)</h4>
+                        <ul>
+                            <li><strong>Co to je:</strong> Předplacené karty pro veřejnou dopravu a nákupy</li>
+                            <li><strong>Kde koupit:</strong> Na letišti nebo na jakékoli větší stanici metra/vlaku</li>
+                            <li><strong>Záloha:</strong> 500 JPY (vratná při vrácení karty)</li>
+                            <li><strong>Výhody:</strong> Jednodušší cestování, není potřeba kupovat jednotlivé jízdenky, mírně levnější jízdné</li>
+                        </ul>
+
+                        <h4>Městská doprava</h4>
+                        <ul>
+                            <li><strong>Metro:</strong> Efektivní způsob dopravy ve velkých městech (Tokio, Ósaka, Kjóto)</li>
+                            <li><strong>Autobusy:</strong> Dobré pro místa, kam nejezdí vlaky nebo metro</li>
+                            <li><strong>Taxi:</strong> Drahé, ale pohodlné. Nástupní taxa kolem 400-700 JPY</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Ubytování -->
+                <div class="info-card" id="accommodation-section">
+                    <div class="info-header">
+                        <h3><i class="fas fa-hotel"></i> Ubytování</h3>
+                    </div>
+                    <div class="info-content">
+                        <h4>Rezervované hotely</h4>
+                        <ul>
+                            <li><strong>Ósaka (9.-14. října):</strong> Hotel Granvia Osaka</li>
+                            <li><strong>Kjóto (14.-17. října):</strong> Daiwa Roynet Hotel Kyoto Shijo Karasuma</li>
+                            <li><strong>Hirošima (17.-19. října):</strong> Hotel Granvia Hiroshima</li>
+                            <li><strong>Kanazawa (19.-21. října):</strong> Kanazawa Tokyu Hotel</li>
+                            <li><strong>Nagano (21.-23. října):</strong> Hotel Metropolitan Nagano</li>
+                            <li><strong>Tokio (23.-28. října):</strong> Heiwajima Hotel</li>
+                        </ul>
+
+                        <h4>Tipy pro ubytování</h4>
+                        <ul>
+                            <li>Japonské hotely mají často přísné časy pro check-in (15:00-16:00) a check-out (10:00-11:00)</li>
+                            <li>Většina hotelů nabízí úschovu zavazadel před check-in a po check-out</li>
+                            <li>Pokoje jsou obvykle menší než v Evropě</li>
+                            <li>Některé hotely poskytují zdarma Wi-Fi, župany (yukata) a základní toaletní potřeby</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Internet a komunikace -->
+                <div class="info-card" id="internet-section">
+                    <div class="info-header">
+                        <h3><i class="fas fa-wifi"></i> Internet a komunikace</h3>
+                    </div>
+                    <div class="info-content">
+                        <h4>Wi-Fi a mobilní data</h4>
+                        <ul>
+                            <li><strong>Veřejné Wi-Fi:</strong> Dostupné v hotelech, kavárnách, restauracích a na některých veřejných místech</li>
+                            <li><strong>Pocket Wi-Fi:</strong> Přenosný Wi-Fi router, který lze pronajmout na letišti (cca 800-1,000 JPY/den)</li>
+                            <li><strong>SIM karta:</strong> Turistické SIM karty jsou k dispozici na letištích a v obchodech s elektronikou (cca 3,000-5,000 JPY za 15 dní)</li>
+                            <li><strong>eSIM:</strong> Nejpohodlnější řešení, lze aktivovat před odletem (cca 2,500-4,500 JPY za 15 dní)</li>
+                        </ul>
+
+                        <h4>Užitečné aplikace</h4>
+                        <ul>
+                            <li><strong>Google Maps:</strong> Funguje dobře pro navigaci v Japonsku</li>
+                            <li><strong>Japan Transit Planner:</strong> Pro plánování cest veřejnou dopravou</li>
+                            <li><strong>Google Translate:</strong> S možností překladu textu z fotografie</li>
+                            <li><strong>Japan Official Travel App:</strong> Oficiální aplikace japonské turistické organizace</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Zdraví a bezpečnost -->
+                <div class="info-card" id="health-section">
+                    <div class="info-header">
+                        <h3><i class="fas fa-first-aid"></i> Zdraví a bezpečnost</h3>
+                    </div>
+                    <div class="info-content">
+                        <h4>Zdravotní péče</h4>
+                        <ul>
+                            <li><strong>Cestovní pojištění:</strong> Nezbytné! Zdravotní péče v Japonsku je kvalitní, ale drahá</li>
+                            <li><strong>Léky:</strong> Vezměte si dostatečnou zásobu pravidelně užívaných léků a základní lékárničku</li>
+                            <li><strong>Lékárny:</strong> Snadno k nalezení ve městech, často označené zeleným křížem</li>
+                            <li><strong>Nemocnice pro cizince:</strong> Ve velkých městech existují nemocnice s anglicky mluvícím personálem</li>
+                        </ul>
+
+                        <h4>Bezpečnost</h4>
+                        <ul>
+                            <li>Japonsko patří mezi nejbezpečnější země na světě</li>
+                            <li>Kriminalita je velmi nízká, ale běžná opatrnost je stále na místě</li>
+                            <li>Policejní stanice (Koban) jsou časté a policisté ochotní pomoci</li>
+                            <li>Tísňová linka: 110 (policie), 119 (hasiči a záchranná služba)</li>
+                        </ul>
+
+                        <h4>Přírodní katastrofy</h4>
+                        <ul>
+                            <li>Japonsko je náchylné k zemětřesením, tajfunům a tsunami</li>
+                            <li>Stáhněte si aplikaci "Safety tips" pro varování před přírodními katastrofami</li>
+                            <li>Sledujte pokyny místních úřadů v případě mimořádných událostí</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Etiketa a zvyky -->
+                <div class="info-card" id="etiquette-section">
+                    <div class="info-header">
+                        <h3><i class="fas fa-hands"></i> Etiketa a zvyky</h3>
+                    </div>
+                    <div class="info-content">
+                        <h4>Základní etiketa</h4>
+                        <ul>
+                            <li><strong>Pozdravy:</strong> Úklona je běžná, ale pro turisty je akceptován i podání ruky</li>
+                            <li><strong>Boty:</strong> Vždy se zouvejte při vstupu do domů, tradičních restaurací, některých chrámů a historických budov</li>
+                            <li><strong>Jídlo:</strong> Je považováno za nezdvořilé jíst za chůze nebo ve veřejné dopravě (kromě Shinkansenu)</li>
+                            <li><strong>Hluk:</strong> Udržujte nízkou hlasitost ve veřejné dopravě a na veřejných místech</li>
+                            <li><strong>Fotografie:</strong> Vždy se zeptejte, než budete fotografovat lidi</li>
+                        </ul>
+
+                        <h4>Chrámy a svatyně</h4>
+                        <ul>
+                            <li>Chovejte se tiše a s respektem</li>
+                            <li>Následujte místní zvyky (omývání rukou, tleskání, zvonění na zvony)</li>
+                            <li>Některá místa zakazují fotografování nebo vyžadují speciální povolení</li>
+                        </ul>
+
+                        <h4>Onsen (termální lázně)</h4>
+                        <ul>
+                            <li>Před vstupem do vody se důkladně umyjte</li>
+                            <li>Koupání probíhá bez plavek</li>
+                            <li>Dlouhé vlasy by měly být svázané</li>
+                            <li>Ručník nepatří do vody</li>
+                            <li>Tetování mohou být v některých onsenech zakázána</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Počasí a oblečení -->
+                <div class="info-card" id="weather-section">
+                    <div class="info-header">
+                        <h3><i class="fas fa-cloud-sun"></i> Počasí a oblečení</h3>
+                    </div>
+                    <div class="info-content">
+                        <h4>Počasí v říjnu</h4>
+                        <ul>
+                            <li><strong>Ósaka a Kjóto:</strong> 15-23°C, mírně deštivo (5-7 deštivých dnů)</li>
+                            <li><strong>Hirošima:</strong> 15-22°C, mírně deštivo (5-7 deštivých dnů)</li>
+                            <li><strong>Kanazawa:</strong> 13-21°C, deštivěji (8-10 deštivých dnů)</li>
+                            <li><strong>Nagano:</strong> 9-18°C, chladnější, méně deště (4-6 deštivých dnů)</li>
+                            <li><strong>Tokio:</strong> 15-22°C, mírně deštivo (5-7 deštivých dnů)</li>
+                        </ul>
+
+                        <h4>Doporučené oblečení</h4>
+                        <ul>
+                            <li><strong>Vrstvy:</strong> Teploty se mohou během dne výrazně měnit</li>
+                            <li><strong>Lehká bunda nebo svetr:</strong> Pro chladnější rána a večery</li>
+                            <li><strong>Pohodlná obuv:</strong> Počítejte s hodně chůze</li>
+                            <li><strong>Deštník nebo pláštěnka:</strong> Pro případný déšť</li>
+                            <li><strong>Formálnější oblečení:</strong> Pro návštěvu lepších restaurací</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Elektrické zásuvky -->
+                <div class="info-card" id="electricity-section">
+                    <div class="info-header">
+                        <h3><i class="fas fa-plug"></i> Elektrické zásuvky</h3>
+                    </div>
+                    <div class="info-content">
+                        <ul>
+                            <li><strong>Typ zásuvky:</strong> Typ A (dva ploché kolíky)</li>
+                            <li><strong>Napětí:</strong> 100V (nižší než v Evropě)</li>
+                            <li><strong>Frekvence:</strong> 50Hz (východní Japonsko) nebo 60Hz (západní Japonsko)</li>
+                            <li><strong>Adaptér:</strong> Potřebný pro evropské zástrčky</li>
+                            <li><strong>Poznámka:</strong> Některé evropské spotřebiče mohou fungovat pomaleji nebo se více zahřívat kvůli nižšímu napětí</li>
+                        </ul>
+                    </div>
+                </div>
+
+
+
+                <!-- Nouzové kontakty -->
+                <div class="info-card" id="emergency-section">
+                    <div class="info-header">
+                        <h3><i class="fas fa-phone-alt"></i> Nouzové kontakty</h3>
+                    </div>
+                    <div class="info-content">
+                        <h4>Tísňové linky v Japonsku</h4>
+                        <ul>
+                            <li><strong>Policie:</strong> 110</li>
+                            <li><strong>Hasiči a záchranná služba:</strong> 119</li>
+                            <li><strong>Informační linka pro cizince:</strong> 03-5285-8088 (Tokio)</li>
+                        </ul>
+
+                        <h4>České zastoupení v Japonsku</h4>
+                        <ul>
+                            <li><strong>Velvyslanectví ČR v Tokiu</strong></li>
+                            <li>Adresa: 2-16-14, Hiroo, Shibuya-ku, Tokyo 150-0012</li>
+                            <li>Telefon: +81-3-3400-8122</li>
+                            <li>Nouzová linka: +81-90-7711-8159 (pouze v naléhavých případech)</li>
+                            <li>E-mail: tokyo@embassy.mzv.cz</li>
+                            <li>Web: www.mzv.cz/tokyo</li>
+                        </ul>
+
+                        <h4>Pojišťovna</h4>
+                        <ul>
+                            <li><strong>Název pojišťovny:</strong> [Doplnit název pojišťovny]</li>
+                            <li><strong>Číslo pojistky:</strong> [Doplnit číslo pojistky]</li>
+                            <li><strong>Asistenční služba:</strong> [Doplnit telefonní číslo]</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Japonský cestovní průvodce</p>
+        </footer>
+    </div>
+</body>
+</html>
+

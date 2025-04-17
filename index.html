@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Japonský cestovní průvodce - Říjen 2025</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="script.js"></script>
+</head>
+<body>
+    <div class="page-container">
+        <header>
+            <div class="header-container">
+                <div class="logo">
+                    <img src="https://cdn-icons-png.freepik.com/512/7848/7848088.png" alt="Japonsko logo - torii brána">
+                    <h1>Japonsko 2025</h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html" class="active">Úvod</a></li>
+                        <li><a href="itinerary.html">Itinerář</a></li>
+                        <li><a href="budget.html">Rozpočet</a></li>
+                        <li><a href="practical-info.html">Praktické informace</a></li>
+                        <li><a href="language.html">Jazyk</a></li>
+                        <li><a href="maps-japan-leaflet.html">Mapy</a></li>
+                        <li><a href="weather.html">Počasí</a></li>
+                        <li><a href="food.html">Jídlo</a></li>
+                        <li><a href="links.html">Odkazy</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <div class="subnav-container">
+            <nav class="subnav">
+                <ul>
+                    <li><a href="#currency-converter"><i class="fas fa-exchange-alt"></i> Převodník měn</a></li>
+                    <li><a href="#travel-distances"><i class="fas fa-route"></i> Vzdálenosti na cestě</a></li>
+                    <li><a href="#recommended-apps"><i class="fas fa-mobile-alt"></i> Doporučené aplikace</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <main>
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80" alt="Japonská scenérie" class="hero-image">
+                <div class="hero-overlay">
+                    <h1 class="hero-title">Dobrodružství v Japonsku</h1>
+                    <h2 class="hero-subtitle">8.-29. října 2025</h2>
+                </div>
+            </div>
+
+            <!-- Countdown Section -->
+            <div class="countdown-container" id="countdown-container">
+                <h2 class="countdown-title">Odpočet do začátku cesty</h2>
+                <div class="countdown">
+                    <div class="countdown-item">
+                        <span class="countdown-value" id="days">0</span>
+                        <span class="countdown-label">Dní</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-value" id="hours">0</span>
+                        <span class="countdown-label">Hodin</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-value" id="minutes">0</span>
+                        <span class="countdown-label">Minut</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-value" id="seconds">0</span>
+                        <span class="countdown-label">Sekund</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Currency Converter Section -->
+            <section id="currency-converter" class="utility-section">
+                <h2>Převodník měn</h2>
+                <div class="currency-converter-wide">
+                    <div class="converter-card-wide">
+                        <div class="converter-header">
+                            <h3>CZK ↔ JPY</h3>
+                            <span id="last-updated">Aktualizováno: --</span>
+                        </div>
+                        <div class="converter-body-wide">
+                            <div class="converter-left">
+                                <div class="converter-row">
+                                    <div class="input-group">
+                                        <input type="number" id="czk-amount" placeholder="Zadejte částku v Kč">
+                                        <span class="currency-label">Kč</span>
+                                    </div>
+                                    <div class="converter-equals">=</div>
+                                    <div class="input-group">
+                                        <input type="number" id="jpy-amount" placeholder="Zadejte částku v JPY">
+                                        <span class="currency-label">JPY</span>
+                                    </div>
+                                </div>
+                                <div class="exchange-rate">
+                                    Aktuální kurz: <span id="exchange-rate">--</span>
+                                </div>
+                            </div>
+                            <div class="converter-right">
+                                <div class="common-amounts">
+                                    <h4>Běžné částky:</h4>
+                                    <div class="common-amounts-container">
+                                        <div class="common-amounts-column">
+                                            <h5>Koruny (CZK)</h5>
+                                            <div class="amount-buttons">
+                                                <button class="amount-btn" data-amount="100">100 Kč</button>
+                                                <button class="amount-btn" data-amount="200">200 Kč</button>
+                                                <button class="amount-btn" data-amount="500">500 Kč</button>
+                                                <button class="amount-btn" data-amount="1000">1000 Kč</button>
+                                                <button class="amount-btn" data-amount="2000">2000 Kč</button>
+                                                <button class="amount-btn" data-amount="5000">5000 Kč</button>
+                                            </div>
+                                        </div>
+                                        <div class="common-amounts-column">
+                                            <h5>Jeny (JPY)</h5>
+                                            <div class="amount-buttons">
+                                                <button class="amount-btn jpy" data-amount="500">500 ¥</button>
+                                                <button class="amount-btn jpy" data-amount="1000">1000 ¥</button>
+                                                <button class="amount-btn jpy" data-amount="2000">2000 ¥</button>
+                                                <button class="amount-btn jpy" data-amount="5000">5000 ¥</button>
+                                                <button class="amount-btn jpy" data-amount="10000">10000 ¥</button>
+                                                <button class="amount-btn jpy" data-amount="50000">50000 ¥</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Travel Distances Section -->
+            <section id="travel-distances" class="utility-section">
+                <h2>Vzdálenosti na cestě</h2>
+                <div class="distances-container">
+                    <div class="distance-card">
+                        <div class="distance-icon">
+                            <i class="fas fa-plane"></i>
+                        </div>
+                        <div class="distance-info">
+                            <h3>Letecky</h3>
+                            <p class="distance-value">22,400 km</p>
+                            <ul class="distance-details">
+                                <li>Praha → Tchaj-pej: 9,000 km</li>
+                                <li>Tchaj-pej → Ósaka: 2,200 km</li>
+                                <li>Tokio → Tchaj-pej: 2,200 km</li>
+                                <li>Tchaj-pej → Praha: 9,000 km</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="distance-card">
+                        <div class="distance-icon">
+                            <i class="fas fa-train"></i>
+                        </div>
+                        <div class="distance-info">
+                            <h3>Shinkansen</h3>
+                            <p class="distance-value">1,350 km</p>
+                            <ul class="distance-details">
+                                <li>Ósaka → Hirošima: 330 km</li>
+                                <li>Hirošima → Kjóto: 380 km</li>
+                                <li>Kjóto → Kanazawa: 240 km</li>
+                                <li>Kanazawa → Nagano: 200 km</li>
+                                <li>Nagano → Tokio: 200 km</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="distance-card">
+                        <div class="distance-icon">
+                            <i class="fas fa-subway"></i>
+                        </div>
+                        <div class="distance-info">
+                            <h3>MHD</h3>
+                            <p class="distance-value">320 km</p>
+                            <ul class="distance-details">
+                                <li>Ósaka: 75 km</li>
+                                <li>Kjóto: 45 km</li>
+                                <li>Hirošima: 30 km</li>
+                                <li>Kanazawa: 20 km</li>
+                                <li>Nagano: 25 km</li>
+                                <li>Tokio: 125 km</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="distance-card">
+                        <div class="distance-icon">
+                            <i class="fas fa-walking"></i>
+                        </div>
+                        <div class="distance-info">
+                            <h3>Pěšky</h3>
+                            <p class="distance-value">180 km</p>
+                            <ul class="distance-details">
+                                <li>Průměrně 8-10 km denně</li>
+                                <li>Nejvíce v Kjótu: 35 km</li>
+                                <li>Nejvíce v Tokiu: 40 km</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="distance-card">
+                        <div class="distance-icon">
+                            <i class="fas fa-bus"></i>
+                        </div>
+                        <div class="distance-info">
+                            <h3>Autobus</h3>
+                            <p class="distance-value">150 km</p>
+                            <ul class="distance-details">
+                                <li>Ósaka → Nara: 30 km</li>
+                                <li>Hirošima → Mijadžima: 25 km</li>
+                                <li>Výlety kolem hory Fuji: 95 km</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recommended Apps Section -->
+            <section id="recommended-apps" class="utility-section">
+                <h2>Doporučené mobilní aplikace</h2>
+                <div class="apps-container">
+                    <div class="app-card">
+                        <div class="app-icon">
+                            <img src="https://play-lh.googleusercontent.com/yu72YgUbH9tLnRq5LzBk4WZ3axwCRaTQ_T2cKSYirmJNpc6zjSiiTpN3PfxAOO5jY4_6=w240-h480-rw" alt="Japan Travel by NAVITIME">
+                        </div>
+                        <div class="app-info">
+                            <h3>Japan Travel by NAVITIME</h3>
+                            <p>Kompletní průvodce pro cestování po Japonsku s offline mapami, jízdními řády a turistickými informacemi.</p>
+                            <a href="https://play.google.com/store/apps/details?id=com.navitime.inbound.walk&hl=cs" target="_blank" class="app-download-btn">Stáhnout z Google Play</a>
+                        </div>
+                    </div>
+
+                    <div class="app-card">
+                        <div class="app-icon">
+                            <img src="https://play-lh.googleusercontent.com/ZrNeuKthBirZN7rrXPN1JmUbaG8ICy3kZSHt-WgSnREsJzo2txzCzjIoChlevMIQEA" alt="Google Translate">
+                        </div>
+                        <div class="app-info">
+                            <h3>Google Translate</h3>
+                            <p>Nepostradatelný nástroj pro překlad s možností offline překladu, překladu pomocí fotoaparátu a konverzace.</p>
+                            <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.translate&hl=cs" target="_blank" class="app-download-btn">Stáhnout z Google Play</a>
+                        </div>
+                    </div>
+
+                    <div class="app-card">
+                        <div class="app-icon">
+                            <img src="https://play-lh.googleusercontent.com/leS776f_eeneHRbEsoUWkYc2rLlqlqU5OVqsh1luRPgKofbY8394DTKToCvUmzug2Yw=w240-h480-rw" alt="Japan Transit Planner">
+                        </div>
+                        <div class="app-info">
+                            <h3>Japan Transit Planner</h3>
+                            <p>Populární aplikace pro vyhledávání vlakových a autobusových spojení v Japonsku s přesnými jízdními řády.</p>
+                            <a href="https://play.google.com/store/apps/details?id=jp.co.jorudan.nrkj&hl=en" target="_blank" class="app-download-btn">Stáhnout z Google Play</a>
+                        </div>
+                    </div>
+
+                    <div class="app-card">
+                        <div class="app-icon">
+                            <img src="https://play-lh.googleusercontent.com/0qIT7fr_3c55vK5CiHmjm6mYno5IKXckqfkNgLkwcTGqGNerIFHpBencx7cmLcpATeF4" alt="Tokyo Metro Subway">
+                        </div>
+                        <div class="app-info">
+                            <h3>Tokyo Metro Subway</h3>
+                            <p>Podrobné mapy a navigace pro tokijské metro s plánovačem tras, informacemi o stanicích a offline režimem.</p>
+                            <a href="https://play.google.com/store/apps/details?id=uk.co.mxdata.tokyometro&hl=en" target="_blank" class="app-download-btn">Stáhnout z Google Play</a>
+                        </div>
+                    </div>
+
+                    <div class="app-card">
+                        <div class="app-icon">
+                            <img src="https://play-lh.googleusercontent.com/lb6Ws6POffsSByFau5ex9GBC1wdFRkynhxaYrVi9JwzqmCuQlgssyjSWqks_dxit6zU=w240-h480-rw" alt="Japan Taxi">
+                        </div>
+                        <div class="app-info">
+                            <h3>Japan Taxi</h3>
+                            <p>Oficiální aplikace pro objednávání taxíků v Japonsku, která umožňuje snadnou rezervaci a sledování jízdy.</p>
+                            <a href="https://play.google.com/store/apps/details?id=com.dena.automotive.taxibell&hl=en" target="_blank" class="app-download-btn">Stáhnout z Google Play</a>
+                        </div>
+                    </div>
+
+                    <div class="app-card">
+                        <div class="app-icon">
+                            <img src="https://play-lh.googleusercontent.com/4eDxJcFnyM4-wm2aZKKwAvpOqdQ6jfkOT0zwectXCVw-1Fft5Z8pq3_5g4afRbK4Hvg=w240-h480-rw" alt="Safety tips">
+                        </div>
+                        <div class="app-info">
+                            <h3>Safety tips</h3>
+                            <p>Oficiální aplikace pro varování před přírodními katastrofami v Japonsku, jako jsou zemětřesení, tsunami a tajfuny.</p>
+                            <a href="https://play.google.com/store/apps/details?id=jp.co.rcsc.safetyTips.android&hl=en" target="_blank" class="app-download-btn">Stáhnout z Google Play</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Japonský cestovní průvodce</p>
+        </footer>
+    </div>
+</body>
+</html>

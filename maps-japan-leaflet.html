@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Japonska - Japonský cestovní průvodce</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script src="script.js"></script>
+    <style>
+        /* Řešení problému s poskakováním stránky */
+        body {
+            padding-right: 0 !important;
+        }
+
+        .maps-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .map-section {
+            margin-bottom: 40px;
+        }
+
+        .map-header {
+            background-color: #0f3460;
+            color: white;
+            padding: 15px;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .map-content {
+            background-color: white;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            padding: 0;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .map-wrapper {
+            width: 100%;
+            height: 700px;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-navigation {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .map-navigation a {
+            padding: 8px 15px;
+            background-color: #f5f5f5;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .map-navigation a:hover {
+            background-color: #e0e0e0;
+        }
+
+        .map-navigation a.active {
+            background-color: #0f3460;
+            color: white;
+        }
+
+        .leaflet-popup-content {
+            margin: 10px;
+        }
+
+        .leaflet-popup-content h3 {
+            margin: 0 0 5px 0;
+            color: #0f3460;
+            font-size: 1rem;
+        }
+
+        .leaflet-popup-content p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .leaflet-popup-content img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .map-wrapper {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <header>
+            <div class="header-container">
+                <div class="logo">
+                    <img src="https://cdn-icons-png.freepik.com/512/7848/7848088.png" alt="Japonsko logo - torii brána">
+                    <h1>Japonsko 2025</h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">Úvod</a></li>
+                        <li><a href="itinerary.html">Itinerář</a></li>
+                        <li><a href="budget.html">Rozpočet</a></li>
+                        <li><a href="practical-info.html">Praktické informace</a></li>
+                        <li><a href="language.html">Jazyk</a></li>
+                        <li><a href="maps-japan-leaflet.html" class="active">Mapy</a></li>
+                        <li><a href="weather.html">Počasí</a></li>
+                        <li><a href="food.html">Jídlo</a></li>
+                        <li><a href="links.html">Odkazy</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <div class="subnav-container">
+            <nav class="subnav">
+                <ul>
+                    <li><a href="maps-japan-leaflet.html" class="active"><i class="fas fa-map"></i> Japonsko</a></li>
+                    <li><a href="maps-osaka-leaflet.html"><i class="fas fa-city"></i> Ósaka</a></li>
+                    <li><a href="maps-kyoto-leaflet.html"><i class="fas fa-torii-gate"></i> Kjóto</a></li>
+                    <li><a href="maps-hiroshima-leaflet.html"><i class="fas fa-dove"></i> Hirošima</a></li>
+                    <li><a href="maps-kanazawa-leaflet.html"><i class="fas fa-leaf"></i> Kanazawa</a></li>
+                    <li><a href="maps-nagano-leaflet.html"><i class="fas fa-mountain"></i> Nagano</a></li>
+                    <li><a href="maps-tokyo-leaflet.html"><i class="fas fa-building"></i> Tokio</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <main>
+            <section class="maps-container">
+                <h2>Interaktivní mapy</h2>
+
+                <div class="map-section">
+                    <div class="map-header">
+                        <i class="fas fa-map-marker-alt"></i> Japonsko
+                    </div>
+                    <div class="map-content">
+                        <div class="map-wrapper">
+                            <div id="map"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2025 Japonský cestovní průvodce</p>
+        </footer>
+    </div>
+
+    <script>
+        // Data bodů zájmu
+        const pointsOfInterest = {
+            // Ósaka
+            "osaka-hotel": {
+                position: [34.6565, 135.4965],
+                title: "Apartment Hotel 11 Namba Minami IV",
+                type: "accommodation",
+                icon: "purple"
+            },
+            "osaka-castle": {
+                position: [34.6873, 135.5262],
+                title: "Ósacký hrad",
+                type: "attraction",
+                icon: "red"
+            },
+            "dotonbori": {
+                position: [34.6687, 135.5031],
+                title: "Dōtonbori",
+                type: "attraction",
+                icon: "red"
+            },
+            "universal-studios": {
+                position: [34.6654, 135.4323],
+                title: "Universal Studios Japan",
+                type: "attraction",
+                icon: "red"
+            },
+            "umeda-sky": {
+                position: [34.7052, 135.4957],
+                title: "Umeda Sky Building",
+                type: "attraction",
+                icon: "red"
+            },
+            "shinsekai": {
+                position: [34.6518, 135.5062],
+                title: "Shinsekai",
+                type: "attraction",
+                icon: "red"
+            },
+            "expo-2025": {
+                position: [34.6406, 135.4101],
+                title: "Expo 2025",
+                type: "attraction",
+                icon: "red"
+            },
+            "nara": {
+                position: [34.6851, 135.8048],
+                title: "Nara",
+                type: "day-trip",
+                icon: "green"
+            },
+            "himeji": {
+                position: [34.8394, 134.6939],
+                title: "Hrad Himeji",
+                type: "day-trip",
+                icon: "green"
+            },
+            "kobe-nunobiki": {
+                position: [34.7064, 135.2107],
+                title: "Bylinné zahrady Kobe Nunobiki",
+                type: "day-trip",
+                icon: "green"
+            },
+
+            // Kjóto
+            "kyoto-hotel": {
+                position: [34.9945, 135.7597],
+                title: "Hotel Mondonce Kyoto Gojo",
+                type: "accommodation",
+                icon: "purple"
+            },
+            "fushimi-inari": {
+                position: [34.9671, 135.7727],
+                title: "Fushimi Inari Taisha",
+                type: "attraction",
+                icon: "red"
+            },
+            "kiyomizu-dera": {
+                position: [34.9949, 135.7851],
+                title: "Kiyomizu-dera",
+                type: "attraction",
+                icon: "red"
+            },
+            "arashiyama": {
+                position: [35.0094, 135.6682],
+                title: "Bambusový les Arashiyama",
+                type: "attraction",
+                icon: "red"
+            },
+            "kinkakuji": {
+                position: [35.0394, 135.7292],
+                title: "Kinkaku-ji (Zlatý pavilon)",
+                type: "attraction",
+                icon: "red"
+            },
+            "gion": {
+                position: [35.0037, 135.7751],
+                title: "Čtvrť Gion",
+                type: "attraction",
+                icon: "red"
+            },
+            "nijo-castle": {
+                position: [35.0142, 135.7480],
+                title: "Hrad Nijo",
+                type: "attraction",
+                icon: "red"
+            },
+            "nishiki-market": {
+                position: [35.0051, 135.7649],
+                title: "Tržiště Nishiki",
+                type: "attraction",
+                icon: "red"
+            },
+            "imperial-palace": {
+                position: [35.0250, 135.7620],
+                title: "Císařský palác v Kjótu",
+                type: "attraction",
+                icon: "red"
+            },
+            "ryoanji": {
+                position: [35.0345, 135.7182],
+                title: "Chrám Ryoan-ji",
+                type: "attraction",
+                icon: "red"
+            },
+            "railway-museum": {
+                position: [34.9872, 135.7425],
+                title: "Železniční muzeum Kjóto",
+                type: "attraction",
+                icon: "red"
+            },
+            "samurai-museum": {
+                position: [35.0050, 135.7650],
+                title: "Samurai Museum Kyoto",
+                type: "attraction",
+                icon: "red"
+            },
+            "pontocho": {
+                position: [35.0038, 135.7700],
+                title: "Ulice Pontocho",
+                type: "attraction",
+                icon: "red"
+            },
+
+            // Hirošima
+            "hiroshima-hotel": {
+                position: [34.3935, 132.4570],
+                title: "Casaen - 1BR Apartment",
+                type: "accommodation",
+                icon: "purple"
+            },
+            "peace-memorial": {
+                position: [34.3952, 132.4524],
+                title: "Hirošimský památník míru",
+                type: "attraction",
+                icon: "red"
+            },
+            "atomic-dome": {
+                position: [34.3953, 132.4535],
+                title: "Atomový dóm",
+                type: "attraction",
+                icon: "red"
+            },
+            "hiroshima-castle": {
+                position: [34.4027, 132.4594],
+                title: "Hirošimský hrad",
+                type: "attraction",
+                icon: "red"
+            },
+            "shukkei-en": {
+                position: [34.3997, 132.4670],
+                title: "Zahrada Shukkei-en",
+                type: "attraction",
+                icon: "red"
+            },
+            "hondori": {
+                position: [34.3931, 132.4573],
+                title: "Nákupní ulice Hondori",
+                type: "attraction",
+                icon: "red"
+            },
+            "miyajima": {
+                position: [34.2971, 132.3197],
+                title: "Ostrov Miyajima (Itsukushima)",
+                type: "day-trip",
+                icon: "green"
+            },
+            "itsukushima-shrine": {
+                position: [34.2958, 132.3199],
+                title: "Svatyně Itsukushima",
+                type: "day-trip",
+                icon: "green"
+            },
+            "mount-misen": {
+                position: [34.2877, 132.3208],
+                title: "Hora Misen",
+                type: "day-trip",
+                icon: "green"
+            },
+            "yamato-museum": {
+                position: [34.2492, 132.5661],
+                title: "Muzeum Yamato v Kure",
+                type: "day-trip",
+                icon: "green"
+            },
+
+            // Kanazawa
+            "kanazawa-hotel": {
+                position: [36.5780, 136.6486],
+                title: "宿樽 (Yadotaru)",
+                type: "accommodation",
+                icon: "purple"
+            },
+            "kenrokuen": {
+                position: [36.5617, 136.6640],
+                title: "Zahrada Kenroku-en",
+                type: "attraction",
+                icon: "red"
+            },
+            "kanazawa-castle": {
+                position: [36.5636, 136.6593],
+                title: "Hrad Kanazawa",
+                type: "attraction",
+                icon: "red"
+            },
+            "higashi-chaya": {
+                position: [36.5712, 136.6628],
+                title: "Čtvrť Higashi Chaya",
+                type: "attraction",
+                icon: "red"
+            },
+            "nagamachi": {
+                position: [36.5705, 136.6525],
+                title: "Čtvrť Nagamachi",
+                type: "attraction",
+                icon: "red"
+            },
+            "omicho-market": {
+                position: [36.5742, 136.6566],
+                title: "Tržiště Omicho",
+                type: "attraction",
+                icon: "red"
+            },
+
+            // Nagano
+            "nagano-hotel": {
+                position: [36.6434, 138.1892],
+                title: "Hotel JAL City Nagano",
+                type: "accommodation",
+                icon: "purple"
+            },
+            "zenkoji": {
+                position: [36.6612, 138.1900],
+                title: "Chrám Zenkō-ji",
+                type: "attraction",
+                icon: "red"
+            },
+            "togakushi-shrine": {
+                position: [36.7373, 138.0864],
+                title: "Svatyně Togakushi",
+                type: "attraction",
+                icon: "red"
+            },
+            "jigokudani": {
+                position: [36.7327, 138.4621],
+                title: "Jigokudani Monkey Park",
+                type: "attraction",
+                icon: "red"
+            },
+            "matsumoto-castle": {
+                position: [36.2380, 137.9687],
+                title: "Hrad Matsumoto",
+                type: "attraction",
+                icon: "red"
+            },
+            "nagano-olympic": {
+                position: [36.6482, 138.1937],
+                title: "Olympijský stadion Nagano",
+                type: "attraction",
+                icon: "red"
+            },
+
+            // Tokio
+            "tokyo-hotel": {
+                position: [35.5778, 139.7482],
+                title: "お宿寧々東京平和島 (Oyado Nene Tokyo Heiwajima)",
+                type: "accommodation",
+                icon: "purple"
+            },
+            "shibuya": {
+                position: [35.6594, 139.7005],
+                title: "Shibuya Crossing",
+                type: "attraction",
+                icon: "red"
+            },
+            "shinjuku": {
+                position: [35.6851, 139.7094],
+                title: "Shinjuku Gyoen",
+                type: "attraction",
+                icon: "red"
+            },
+            "meiji": {
+                position: [35.6763, 139.6993],
+                title: "Svatyně Meiji",
+                type: "attraction",
+                icon: "red"
+            },
+            "asakusa": {
+                position: [35.7147, 139.7966],
+                title: "Asakusa a Senso-ji",
+                type: "attraction",
+                icon: "red"
+            },
+            "skytree": {
+                position: [35.7101, 139.8107],
+                title: "Tokyo Skytree",
+                type: "attraction",
+                icon: "red"
+            },
+            "akihabara": {
+                position: [35.6983, 139.7707],
+                title: "Akihabara",
+                type: "attraction",
+                icon: "red"
+            },
+            "imperial": {
+                position: [35.6852, 139.7528],
+                title: "Císařský palác",
+                type: "attraction",
+                icon: "red"
+            },
+            "odaiba": {
+                position: [35.6246, 139.7755],
+                title: "Odaiba",
+                type: "attraction",
+                icon: "red"
+            },
+            "tokyo-tower": {
+                position: [35.6586, 139.7454],
+                title: "Tokyo Tower",
+                type: "attraction",
+                icon: "red"
+            },
+            "tokyo-metropolitan": {
+                position: [35.6897, 139.6922],
+                title: "Tokijská metropolitní vládní budova",
+                type: "attraction",
+                icon: "red"
+            },
+            "tsukiji": {
+                position: [35.6654, 139.7707],
+                title: "Trh Tsukiji",
+                type: "attraction",
+                icon: "red"
+            },
+            "kamakura": {
+                position: [35.3192, 139.5467],
+                title: "Kamakura",
+                type: "day-trip",
+                icon: "green"
+            },
+            "enoshima": {
+                position: [35.3002, 139.4808],
+                title: "Enoshima",
+                type: "day-trip",
+                icon: "green"
+            },
+            "nikko": {
+                position: [36.7485, 139.6203],
+                title: "Nikko",
+                type: "day-trip",
+                icon: "green"
+            },
+            "chureito": {
+                position: [35.5013, 138.8014],
+                title: "Pagoda Chureito",
+                type: "day-trip",
+                icon: "green"
+            },
+            "kawaguchiko": {
+                position: [35.5150, 138.7567],
+                title: "Jezero Kawaguchiko",
+                type: "day-trip",
+                icon: "green"
+            }
+        };
+
+        // Inicializace mapy
+        function initMap() {
+            // Centrum mapy - Japonsko
+            const center = [36.0, 138.0];
+
+            // Vytvoření mapy
+            const map = L.map('map').setView(center, 6);
+
+            // Přidání Esri World Street Map podkladu s anglickými popisky
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+                maxZoom: 19
+            }).addTo(map);
+
+            // Přidání ovládacích prvků pro přiblížení/oddálení
+            L.control.zoom({
+                position: 'topright'
+            }).addTo(map);
+
+            // Vlastní ikony pro markery
+            const icons = {
+                red: L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                }),
+                green: L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                }),
+                purple: L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                })
+            };
+
+            // Přidání markerů na mapu
+            for (const [id, poi] of Object.entries(pointsOfInterest)) {
+                const marker = L.marker(poi.position, {
+                    title: poi.title,
+                    icon: icons[poi.icon]
+                }).addTo(map);
+
+                // Obsah popup okna
+                const content = `
+                    <div>
+                        <h3>${poi.title}</h3>
+                    </div>
+                `;
+
+                marker.bindPopup(content);
+            }
+        }
+
+        // Načtení mapy po načtení stránky
+        document.addEventListener('DOMContentLoaded', initMap);
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rozpočet - Japonský cestovní průvodce</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .budget-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .budget-table th {
+            background-color: #0f3460;
+            color: white;
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1rem;
+            position: sticky;
+            top: 0;
+            border: 1px solid #0f3460;
+        }
+
+        .budget-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .budget-table td:nth-child(2),
+        .budget-table td:nth-child(3) {
+            text-align: right;
+        }
+
+        .budget-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .budget-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .budget-table .category-header {
+            background-color: #e94560 !important;
+            font-weight: 600;
+            color: white !important;
+        }
+
+        .budget-table .category-header td {
+            padding: 8px 10px;
+            font-size: 1rem;
+            background-color: #e94560 !important;
+            color: white !important;
+        }
+
+        .budget-table .category-header td i {
+            margin-right: 10px;
+        }
+
+        .budget-table .category-total {
+            font-weight: 600;
+            background-color: #e9e9e9;
+        }
+
+        .budget-table .grand-total {
+            font-weight: 700;
+            background-color: #d9d9d9;
+        }
+
+        .budget-table input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .budget-section {
+            margin-bottom: 40px;
+        }
+
+        .budget-note {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .currency-info {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .currency-info p {
+            margin-bottom: 5px;
+        }
+
+        .currency-info .exchange-rate {
+            font-weight: 600;
+            color: #0f3460;
+        }
+
+        .table-container {
+            margin-bottom: 20px;
+        }
+
+        .budget-table a {
+            text-decoration: underline;
+            color: #0f3460;
+        }
+
+        /* Styly pro sekci běžných cen */
+        .common-prices-section {
+            margin-top: 40px;
+        }
+
+        .common-prices-section h3 {
+            color: #0f3460;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #e94560;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .common-prices-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .common-prices-table th {
+            background-color: #0f3460;
+            color: white;
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 1px solid #0f3460;
+        }
+
+        .common-prices-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .common-prices-table td:nth-child(2),
+        .common-prices-table td:nth-child(3) {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .common-prices-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .common-prices-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .common-prices-table .category-header {
+            background-color: #e94560 !important;
+            font-weight: 600;
+            color: white !important;
+        }
+
+        .common-prices-table .category-header td {
+            padding: 8px 10px;
+            font-size: 1rem;
+            background-color: #e94560 !important;
+            color: white !important;
+        }
+
+        .common-prices-table .category-header td i {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <header>
+            <div class="header-container">
+                <div class="logo">
+                    <img src="https://cdn-icons-png.freepik.com/512/7848/7848088.png" alt="Japonsko logo - torii brána">
+                    <h1>Japonsko 2025</h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">Úvod</a></li>
+                        <li><a href="itinerary.html">Itinerář</a></li>
+                        <li><a href="budget.html" class="active">Rozpočet</a></li>
+                        <li><a href="practical-info.html">Praktické informace</a></li>
+                        <li><a href="language.html">Jazyk</a></li>
+                        <li><a href="maps-japan-leaflet.html">Mapy</a></li>
+                        <li><a href="weather.html">Počasí</a></li>
+                        <li><a href="food.html">Jídlo</a></li>
+                        <li><a href="links.html">Odkazy</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <div class="subnav-container">
+            <nav class="subnav">
+                <ul>
+                    <li><a href="#budget-table-section"><i class="fas fa-table"></i> Rozpočet cesty</a></li>
+                    <li><a href="#common-prices-section"><i class="fas fa-yen-sign"></i> Běžné ceny v Japonsku</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <main>
+            <section class="budget-section" id="budget-table-section">
+                <h2>Rozpočet cesty</h2>
+                <p class="section-intro">Přehled plánovaných výdajů na cestu do Japonska v říjnu 2025. Sledujte stav plateb a rezervací.</p>
+
+                <div class="currency-info">
+                    <p><i class="fas fa-exchange-alt"></i> <strong>Směnný kurz:</strong> <span class="exchange-rate">1 JPY (¥) ≈ 0,15 CZK</span></p>
+                    <p>Ceny jsou orientační a mohou se měnit.</p>
+                </div>
+
+                <div class="table-container">
+                    <table class="budget-table">
+                        <thead>
+                            <tr>
+                                <th>Položka</th>
+                                <th>Cena (CZK)</th>
+                                <th>Cena (¥)</th>
+                                <th>Zaplaceno</th>
+                                <th>Poznámky</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Letenky -->
+                            <tr class="category-header">
+                                <td colspan="5"><i class="fas fa-plane"></i> Letenky</td>
+                            </tr>
+                            <tr>
+                                <td>letenky PRG-TPE-KIX</td>
+                                <td>27 792 Kč</td>
+                                <td>180 468 ¥</td>
+                                <td><input type="checkbox" checked></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>letenky NRT-TPE-PRG</td>
+                                <td>27 792 Kč</td>
+                                <td>180 468 ¥</td>
+                                <td><input type="checkbox" checked></td>
+                                <td></td>
+                            </tr>
+
+                            <!-- Ubytování -->
+                            <tr class="category-header">
+                                <td colspan="5"><i class="fas fa-hotel"></i> Ubytování</td>
+                            </tr>
+                            <tr>
+                                <td><a href="https://secure.booking.com/confirmation.cs.html?from_conf_email_tracking=1&=&pbtrack=email_mainCTA&bn=4434752320&from_conf_email_source=1&aid=2079993" target="_blank">Osaka - Apartment Hotel 11 Namba Minami IV</a></td>
+                                <td>10 482 Kč</td>
+                                <td>68 065 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td>zaplatí se 2.10.</td>
+                            </tr>
+                            <tr>
+                                <td><a href="https://secure.booking.com/confirmation.cs.html?aid=356980&label=gen173nr-1FCAEoggI46AdIM1gEaDqIAQGYAQW4ARfIAQzYAQHoAQH4AQyIAgGoAgO4Asyf_bwGwAIB0gIkMWM5YjA0MDQtMTc4Yy00Mzg5LThmOTYtNDE0NjdjOWZhYmI52AIG4AIB&sid=cbe19f78f3a258f15cf72856f4e547b3&bp_travel_purpose=leisure&hostname=www.booking.com&nflt=price%3DCZK-min-3500-1&pre_pbb_price=30729&pre_price=30728.9&rt_num_blocks=5&source=conf_brief&ua_created=0&bn=4924796783" target="_blank">Hiroshima - Casaen - 1BR Apartment</a></td>
+                                <td>4 736 Kč</td>
+                                <td>30 753 ¥</td>
+                                <td><input type="checkbox" checked></td>
+                                <td>provést registraci</td>
+                            </tr>
+                            <tr>
+                                <td><a href="https://www.bon-lodging.com/hotel-mondonce-kyoto-gojo/" target="_blank">Kyoto - Hotel-Mondonce</a></td>
+                                <td>8 886 Kč</td>
+                                <td>57 703 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><a href="https://secure.booking.com/confirmation.cs.html?aid=304142&label=gen173nr-1FCAEoggI46AdIM1gEaDqIAQGYAQW4ARfIAQzYAQHoAQH4AQyIAgGoAgO4Asyf_bwGwAIB0gIkMWM5YjA0MDQtMTc4Yy00Mzg5LThmOTYtNDE0NjdjOWZhYmI52AIG4AIB&sid=cbe19f78f3a258f15cf72856f4e547b3&bp_travel_purpose=leisure&hostname=www.booking.com&pre_pbb_price=13464&pre_price=13464&rt_num_blocks=6&source=conf_brief&srpvid=fa2b6b2f4a090086&ua_created=0&bn=4413028353" target="_blank">Kanazawa - 宿樽</a></td>
+                                <td>2 073 Kč</td>
+                                <td>13 464 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td>zaplatí se 14.10.</td>
+                            </tr>
+                            <tr>
+                                <td><a href="https://secure.booking.com/confirmation.cs.html?aid=304142&label=gen173nr-1FCAEoggI46AdIM1gEaDqIAQGYAQW4ARfIAQzYAQHoAQH4AQyIAgGoAgO4Asyf_bwGwAIB0gIkMWM5YjA0MDQtMTc4Yy00Mzg5LThmOTYtNDE0NjdjOWZhYmI52AIG4AIB&sid=cbe19f78f3a258f15cf72856f4e547b3&bp_travel_purpose=leisure&hostname=www.booking.com&pre_pbb_price=25474&pre_price=25474.5&rt_num_blocks=52&source=conf_brief&ua_created=0&bn=4362180799" target="_blank">Nagano - Hotel JAL City</a></td>
+                                <td>3 923 Kč</td>
+                                <td>25 474 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td>zaplatí se 17.10.</td>
+                            </tr>
+                            <tr>
+                                <td><a href="https://secure.booking.com/confirmation.cs.html?label=gen173nr-1FCAEoggI46AdIM1gEaDqIAQGYAQW4ARfIAQzYAQHoAQH4AQyIAgGoAgO4Asyf_bwGwAIB0gIkMWM5YjA0MDQtMTc4Yy00Mzg5LThmOTYtNDE0NjdjOWZhYmI52AIG4AIB&sid=cbe19f78f3a258f15cf72856f4e547b3&aid=304142&auth_key=0W5WcvRWf5LHysdf&source=mytrips" target="_blank">Tokyo - お宿寧々東京平和島OyadoNene駅4分</a></td>
+                                <td>23 002 Kč</td>
+                                <td>149 362 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td>zaplatí se 18.10., registrace</td>
+                            </tr>
+
+                            <!-- Doprava -->
+                            <tr class="category-header">
+                                <td colspan="5"><i class="fas fa-train"></i> Doprava</td>
+                            </tr>
+                            <tr>
+                                <td>ICOCA karta</td>
+                                <td>231 Kč</td>
+                                <td>1 500 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>cesta z letiště Nankai Airport Express</td>
+                                <td>551 Kč</td>
+                                <td>3 580 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>MHD Osaka</td>
+                                <td>1 138 Kč</td>
+                                <td>7 390 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Kansai-Hiroshima Area Pass 5 days</td>
+                                <td>7 854 Kč</td>
+                                <td>51 000 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td><a href="https://www.westjr.co.jp/global/en/ticket/pass/kansai_hiroshima/" target="_blank">lístky online</a></td>
+                            </tr>
+                            <tr>
+                                <td>MHD Kyoto</td>
+                                <td>1 737 Kč</td>
+                                <td>11 280 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>vlak do Kanazawy</td>
+                                <td>3 003 Kč</td>
+                                <td>19 500 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td><a href="https://www.westjr.co.jp/global/en/ticket/pass/one_way/hokuriku/" target="_blank">lístky online</a></td>
+                            </tr>
+                            <tr>
+                                <td>vlak do Nagana</td>
+                                <td>3 973 Kč</td>
+                                <td>25 800 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td><a href="https://www.klook.com/rails-32/search/?origin_position_name=Kanazawa&origin_position=a238d7d3-098a-45d8-b8b2-6e44f44dfca8&destination_position_name=Nagano&destination_position=f6415f2d-5929-4c5d-8dc9-f9c0a6cb27bb&departure_date=2025-04-15&utm_medium=google-p2p&utm_source=rail&aid=10716&_currency=JPY" target="_blank">lístky online</a></td>
+                            </tr>
+                            <tr>
+                                <td>SHIGA KOGEN EXPRESS BUS</td>
+                                <td>1 340 Kč</td>
+                                <td>8 700 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>2Limited ExpressNagoya</td>
+                                <td>3 049 Kč</td>
+                                <td>19 800 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>vlak do Tokya</td>
+                                <td>3 865 Kč</td>
+                                <td>25 100 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>MHD Tokyo</td>
+                                <td>3 222 Kč</td>
+                                <td>20 920 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>vlak Tobu Asakusa Station - Tobu-Nikko Station a zpět</td>
+                                <td>2 495 Kč</td>
+                                <td>16 200 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Chuzenji Onsen Free Pass</td>
+                                <td>924 Kč</td>
+                                <td>6 000 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>autobus Shinjuku station do Kawaguchiko Station</td>
+                                <td>2 033 Kč</td>
+                                <td>13 200 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td><a href="https://highway-buses.jp/course/kawaguchiko.php" target="_blank">lístky online</a></td>
+                            </tr>
+                            <tr>
+                                <td>lanovka mtFuji</td>
+                                <td>462 Kč</td>
+                                <td>3 000 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td><a href="https://www.mtfujiropeway.jp/en/guide/" target="_blank">lístky online</a></td>
+                            </tr>
+                            <tr>
+                                <td>autobus Kawaguchiko</td>
+                                <td>323 Kč</td>
+                                <td>2 100 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Shonan monorail</td>
+                                <td>185 Kč</td>
+                                <td>1 200 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>doprava z Kamakury</td>
+                                <td>616 Kč</td>
+                                <td>4 000 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>cesta na letiště</td>
+                                <td>1 540 Kč</td>
+                                <td>10 000 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+
+                            <!-- Vstupné -->
+                            <tr class="category-header">
+                                <td colspan="5"><i class="fas fa-ticket-alt"></i> Vstupné</td>
+                            </tr>
+                            <tr>
+                                <td>Expo 2025</td>
+                                <td>2 387 Kč</td>
+                                <td>15 500 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td><a href="https://www.expo2025.or.jp/en/tickets-index/price/" target="_blank">lístky online</a></td>
+                            </tr>
+                            <tr>
+                                <td>Umeda Sky</td>
+                                <td>924 Kč</td>
+                                <td>6 000 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td><a href="https://umedaskybuilding.partner.klook.com/en-US/activity/78669-umeda-sky-building-kuchu-teien-observatory-ticket/?aid=30372&utm_medium=affiliate-alwayson&utm_source=non-network&utm_campaign=30372&utm_term&utm_content" target="_blank">lístky online</a></td>
+                            </tr>
+                            <tr>
+                                <td>Zahrada Isuien</td>
+                                <td>462 Kč</td>
+                                <td>3 000 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Universal Studios Japan</td>
+                                <td>3 973 Kč</td>
+                                <td>25 800 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td><a href="https://www.usjticketing.com/" target="_blank">lístky online</a></td>
+                            </tr>
+                            <tr>
+                                <td>Himeji Castle</td>
+                                <td>379 Kč</td>
+                                <td>2 460 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Hiroshima memorial park</td>
+                                <td>92 Kč</td>
+                                <td>600 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Yamato museum</td>
+                                <td>370 Kč</td>
+                                <td>2 400 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>lanovka na vrchol Misen</td>
+                                <td>924 Kč</td>
+                                <td>6 000 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Kobe Nunobiki Herb Gardens & Ropeway</td>
+                                <td>924 Kč</td>
+                                <td>6 000 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Kiyomizudera</td>
+                                <td>185 Kč</td>
+                                <td>1 200 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Nijo Castle</td>
+                                <td>601 Kč</td>
+                                <td>3 900 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Chrám Kinkakuji</td>
+                                <td>185 Kč</td>
+                                <td>1 200 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Samurai museum</td>
+                                <td>1 247 Kč</td>
+                                <td>8 100 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td><a href="https://mai-ko.com/tour/samurai-experience-kyoto-samurai-museum-tour-and-armor-trial/" target="_blank">lístky online</a></td>
+                            </tr>
+                            <tr>
+                                <td>Geisha show</td>
+                                <td>6 486 Kč</td>
+                                <td>42 120 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td><a href="https://mai-ko.com/tour/tea-ceremony-led-by-a-geisha-2/" target="_blank">lístky online</a></td>
+                            </tr>
+                            <tr>
+                                <td>Kyoto Railway Museum</td>
+                                <td>662 Kč</td>
+                                <td>4 300 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td><a href="https://www.kyotorailwaymuseum.jp/en/tickets/" target="_blank">lístky online</a></td>
+                            </tr>
+                            <tr>
+                                <td>samurajský dům Nomura</td>
+                                <td>216 Kč</td>
+                                <td>1 400 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Zahrada Kenrokuen</td>
+                                <td>148 Kč</td>
+                                <td>960 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Chrám Zenkōji</td>
+                                <td>231 Kč</td>
+                                <td>1 500 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Jigokudani monkey park</td>
+                                <td>370 Kč</td>
+                                <td>2 400 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Matsumoto Castle</td>
+                                <td>323 Kč</td>
+                                <td>2 100 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Shibuya Sky</td>
+                                <td>1 078 Kč</td>
+                                <td>7 000 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td><a href="https://www.klook.com/en-US/activity/70672-shibuya-sky-tokyo/?utm_medium=m_1198&utm_campaign=official_redirect&utm_source=merchant_referral" target="_blank">lístky online</a></td>
+                            </tr>
+                            <tr>
+                                <td>Nikko vstupy</td>
+                                <td>462 Kč</td>
+                                <td>3 000 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Tokyo Skytree</td>
+                                <td>924 Kč</td>
+                                <td>6 000 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td><a href="https://tokyo-skytree.co/tickets/" target="_blank">lístky online</a></td>
+                            </tr>
+                            <tr>
+                                <td>Tokyo Tower</td>
+                                <td>693 Kč</td>
+                                <td>4 500 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td><a href="https://en.tokyotower.co.jp/fee/" target="_blank">lístky online</a></td>
+                            </tr>
+                            <tr>
+                                <td>teamLab Borderless</td>
+                                <td>2 310 Kč</td>
+                                <td>15 000 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td><a href="https://borderless-azabudai.ticket.teamlab.art/?_gl=1*1fnsa0h*_gcl_au*MTE4ODYyNzM5MC4xNzM4NDQwMjQx*_ga*MTk2NzU1ODM2OC4xNzM4NDQwMjQy*_ga_E4JDR7KSJ2*MTczODQ0MDI0MS4xLjAuMTczODQ0MDI0Mi41OS4wLjA.#/" target="_blank">lístky online</a></td>
+                            </tr>
+                            <tr>
+                                <td>Velký Buddha v Kamakuře</td>
+                                <td>92 Kč</td>
+                                <td>600 ¥</td>
+                                <td><input type="checkbox"></td>
+                                <td></td>
+                            </tr>
+
+                            <!-- Celkový rozpočet -->
+                            <tr class="category-header">
+                                <td colspan="5"><i class="fas fa-calculator"></i> Celkový rozpočet</td>
+                            </tr>
+                            <tr>
+                                <td>Letenky</td>
+                                <td>55 584 Kč</td>
+                                <td>360 935 ¥</td>
+                                <td colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <td>Ubytování</td>
+                                <td>53 102 Kč</td>
+                                <td>344 821 ¥</td>
+                                <td colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <td>Doprava</td>
+                                <td>38 542 Kč</td>
+                                <td>250 270 ¥</td>
+                                <td colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <td>Vstupné</td>
+                                <td>26 648 Kč</td>
+                                <td>173 040 ¥</td>
+                                <td colspan="2"></td>
+                            </tr>
+                            <tr class="grand-total">
+                                <td>CELKOVÝ ROZPOČET</td>
+                                <td>173 876 Kč</td>
+                                <td>1 129 066 ¥</td>
+                                <td colspan="2"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="budget-note">Poznámka: Tento rozpočet je založen na aktuálních cenách a rezervacích. Směnný kurz: 1 JPY (¥) ≈ 0,15 CZK.</p>
+
+                <div class="common-prices-section" id="common-prices-section">
+                    <h3>Běžné ceny v Japonsku</h3>
+                    <p>Pro lepší představu o cenách v Japonsku uvádíme přehled běžných výdajů, se kterými se můžete setkat během cesty.</p>
+
+                    <table class="common-prices-table">
+                        <thead>
+                            <tr>
+                                <th>Položka</th>
+                                <th>Cena (JPY)</th>
+                                <th>Cena (CZK)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Doprava -->
+                            <tr class="category-header">
+                                <td colspan="3"><i class="fas fa-subway"></i> Doprava</td>
+                            </tr>
+                            <tr>
+                                <td>Jízdenka na metro (jedna cesta)</td>
+                                <td>180-280 ¥</td>
+                                <td>28-43 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Jednodenní jízdenka MHD</td>
+                                <td>600-800 ¥</td>
+                                <td>92-123 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Taxi (základní sazba)</td>
+                                <td>420-730 ¥</td>
+                                <td>65-112 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Taxi (1 km)</td>
+                                <td>350-400 ¥</td>
+                                <td>54-62 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Shinkansen (Tokyo-Kyoto)</td>
+                                <td>13,080-14,170 ¥</td>
+                                <td>2,013-2,180 Kč</td>
+                            </tr>
+
+                            <!-- Jídlo a nápoje -->
+                            <tr class="category-header">
+                                <td colspan="3"><i class="fas fa-utensils"></i> Jídlo a nápoje</td>
+                            </tr>
+                            <tr>
+                                <td>Nápoj z automatu</td>
+                                <td>120-160 ¥</td>
+                                <td>18-25 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Káva v kavárně</td>
+                                <td>300-500 ¥</td>
+                                <td>46-77 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Oběd v běžné restauraci</td>
+                                <td>800-1,200 ¥</td>
+                                <td>123-185 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Večeře v lepší restauraci</td>
+                                <td>2,000-4,000 ¥</td>
+                                <td>308-616 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Miska ramenu</td>
+                                <td>700-1,200 ¥</td>
+                                <td>108-185 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Set sushi (10 ks)</td>
+                                <td>1,000-3,000 ¥</td>
+                                <td>154-462 Kč</td>
+                            </tr>
+
+                            <!-- Vstupné a aktivity -->
+                            <tr class="category-header">
+                                <td colspan="3"><i class="fas fa-ticket-alt"></i> Vstupné a aktivity</td>
+                            </tr>
+                            <tr>
+                                <td>Vstupné do chrámu/muzea</td>
+                                <td>500-1,500 ¥</td>
+                                <td>77-231 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Vyhlídková věž</td>
+                                <td>1,000-3,000 ¥</td>
+                                <td>154-462 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Onsen (veřejné lázně)</td>
+                                <td>500-2,500 ¥</td>
+                                <td>77-385 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Zábavní park (celodenní vstupné)</td>
+                                <td>6,000-8,000 ¥</td>
+                                <td>924-1,232 Kč</td>
+                            </tr>
+
+                            <!-- Ostatní -->
+                            <tr class="category-header">
+                                <td colspan="3"><i class="fas fa-shopping-bag"></i> Ostatní</td>
+                            </tr>
+                            <tr>
+                                <td>Suvenýr</td>
+                                <td>500-3,000 ¥</td>
+                                <td>77-462 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Balená voda (0,5l)</td>
+                                <td>100-150 ¥</td>
+                                <td>15-23 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Prádelna (1 cyklus)</td>
+                                <td>200-400 ¥</td>
+                                <td>31-62 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Jednorázový fotoaparát</td>
+                                <td>1,000-1,500 ¥</td>
+                                <td>154-231 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Deštník</td>
+                                <td>300-1,000 ¥</td>
+                                <td>46-154 Kč</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p class="budget-note">Poznámka: Ceny se mohou lišit podle lokality, sezóny a kvality služeb. Uvedené ceny jsou orientační a odpovídají běžným cenám v roce 2024.</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Japonský cestovní průvodce</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Funkce pro automatické ukládání stavu zaškrtávacích políček
+        document.addEventListener('DOMContentLoaded', function() {
+            // Načtení uložených stavů
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+            checkboxes.forEach(function(checkbox, index) {
+                const savedState = localStorage.getItem('budget_checkbox_' + index);
+                if (savedState === 'true') {
+                    checkbox.checked = true;
+                }
+
+                // Přidání posluchače událostí pro ukládání stavu
+                checkbox.addEventListener('change', function() {
+                    localStorage.setItem('budget_checkbox_' + index, this.checked);
+                });
+            });
+
+            // Setup subnav highlighting
+            setupSubnavHighlighting();
+
+            // Initialize smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 90,
+                            behavior: 'smooth'
+                        });
+
+                        // Update active link in subnav
+                        if (this.closest('.subnav')) {
+                            document.querySelectorAll('.subnav a').forEach(link => {
+                                link.classList.remove('active');
+                            });
+                            this.classList.add('active');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+

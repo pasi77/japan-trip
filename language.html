@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Japonský jazyk - Japonský cestovní průvodce</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="script.js"></script>
+    <script>
+        // Funkce pro přehrávání japonských frází pomocí Web Speech API
+        function playPhrase(phrase) {
+            try {
+                // Zkontrolujeme, zda je Web Speech API podporováno
+                if ('speechSynthesis' in window) {
+                    // Inicializace synthézy řeči
+                    const synth = window.speechSynthesis;
+
+                    // Vytvoříme nový SpeechSynthesisUtterance objekt
+                    const utterance = new SpeechSynthesisUtterance(phrase);
+
+                    // Nastavíme jazyk na japonštinu
+                    utterance.lang = 'ja-JP';
+
+                    // Nastavíme další parametry
+                    utterance.pitch = 1;
+                    utterance.rate = 0.9;
+                    utterance.volume = 1;
+
+                    // Funkce pro nastavení japonského hlasu
+                    function setJapaneseVoice() {
+                        const voices = synth.getVoices();
+                        const japaneseVoice = voices.find(voice => voice.lang.includes('ja'));
+                        if (japaneseVoice) {
+                            utterance.voice = japaneseVoice;
+                        }
+                    }
+
+                    // Pokud jsou hlasy již načteny, nastavíme japonský hlas
+                    if (synth.getVoices().length > 0) {
+                        setJapaneseVoice();
+                    } else {
+                        // Jinak počkáme na načtení hlasů
+                        synth.onvoiceschanged = setJapaneseVoice;
+                    }
+
+                    // Přidáme obslužné události
+                    utterance.onstart = function() {
+                        console.log('Přehrávání fráze: ' + phrase);
+                    };
+                    utterance.onend = function() {
+                        console.log('Přehrávání dokončeno');
+                    };
+                    utterance.onerror = function(e) {
+                        console.error('Chyba při přehrávání pomocí Web Speech API:', e);
+                        tryLocalAudio(phrase);
+                    };
+
+                    // Přehrajeme frázi
+                    synth.speak(utterance);
+                } else {
+                    console.warn('Web Speech API není podporováno, zkusíme lokální audio');
+                    tryLocalAudio(phrase);
+                }
+            } catch (error) {
+                console.error('Chyba při použití Web Speech API:', error);
+                tryLocalAudio(phrase);
+            }
+        }
+
+        // Mapa frází a jejich audio souborů pro lokální přehrávání
+        const phraseMap = {
+            'こんにちは': 'konnichiwa',
+            'おはようございます': 'ohayou-gozaimasu',
+            'こんばんは': 'konbanwa',
+            'ありがとうございます': 'arigatou-gozaimasu',
+            'どうもありがとうございます': 'doumo-arigatou-gozaimasu',
+            'お願いします': 'onegaishimasu',
+            'どうぞ': 'douzo',
+            'はい': 'hai',
+            'いいえ': 'iie',
+            'すみません': 'sumimasen',
+            'ごめんなさい': 'gomennasai',
+            'わかりません': 'wakarimasen',
+            'わかりました': 'wakarimashita',
+            '英語が話せますか？': 'eigo-ga-hanasemasu-ka',
+            '日本語が話せません': 'nihongo-ga-hanasemasen',
+            'ゆっくり話してください': 'yukkuri-hanashite-kudasai',
+            'トイレはどこですか？': 'toire-wa-doko-desu-ka',
+            '駅はどこですか？': 'eki-wa-doko-desu-ka',
+            'にはどう行けばいいですか？': 'ni-wa-dou-ikeba-ii-desu-ka',
+            '遠いですか？': 'tooi-desu-ka'
+            // Další fráze můžete přidat zde
+        };
+
+        // Záložní metoda - přehrát z lokálního souboru, pokud existuje
+        function tryLocalAudio(phrase) {
+            try {
+                const fileName = phraseMap[phrase];
+                if (fileName) {
+                    const audio = new Audio(`audio/${fileName}.mp3`);
+                    audio.play().catch(error => {
+                        console.error('Chyba při přehrávání lokálního audio souboru:', error);
+                        tryGoogleTTS(phrase);
+                    });
+                } else {
+                    console.error('Pro frázi není k dispozici lokální audio soubor:', phrase);
+                    tryGoogleTTS(phrase);
+                }
+            } catch (error) {
+                console.error('Chyba při přehrávání lokálního audio:', error);
+                tryGoogleTTS(phrase);
+            }
+        }
+
+        // Poslední pokus - přímé použití Google TTS API (funguje pouze lokálně)
+        function tryGoogleTTS(phrase) {
+            try {
+                const encodedPhrase = encodeURIComponent(phrase);
+                const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=ja&q=${encodedPhrase}`;
+                const audio = new Audio(audioUrl);
+                audio.play().catch(error => {
+                    console.error('Chyba při přehrávání z Google TTS:', error);
+                    showAudioError();
+                });
+            } catch (error) {
+                console.error('Chyba při přímém použití Google TTS:', error);
+                showAudioError();
+            }
+        }
+
+        // Zobrazí chybovou hlášku, pokud selhal všechny metody přehrávání
+        function showAudioError() {
+            console.error('Všechny metody přehrávání selhaly');
+            alert('Přehrávání zvuku není k dispozici. Zkuste prosím použít jiný prohlížeč nebo povolit JavaScript.');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Alphabet tabs functionality
+            const tabs = document.querySelectorAll('.alphabet-tab');
+            const contents = document.querySelectorAll('.alphabet-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.remove('active'));
+
+                    // Add active class to clicked tab and corresponding content
+                    tab.classList.add('active');
+                    const target = tab.getAttribute('data-target');
+                    document.getElementById(target).classList.add('active');
+                });
+            });
+
+            // Set first tab as active by default
+            if (tabs.length > 0) {
+                tabs[0].click();
+            }
+
+            // Smooth scrolling for category links
+            document.querySelectorAll('.subnav a').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+
+                    if (targetElement) {
+                        // Adjust offset for fixed header and subnav
+                        const offset = 90;
+                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - offset;
+
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="page-container">
+        <header>
+            <div class="header-container">
+                <div class="logo">
+                    <img src="https://cdn-icons-png.freepik.com/512/7848/7848088.png" alt="Japonsko logo - torii brána">
+                    <h1>Japonsko 2025</h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">Úvod</a></li>
+                        <li><a href="itinerary.html">Itinerář</a></li>
+                        <li><a href="budget.html">Rozpočet</a></li>
+                        <li><a href="practical-info.html">Praktické informace</a></li>
+                        <li><a href="language.html" class="active">Jazyk</a></li>
+                        <li><a href="maps-japan-leaflet.html">Mapy</a></li>
+                        <li><a href="weather.html">Počasí</a></li>
+                        <li><a href="food.html">Jídlo</a></li>
+                        <li><a href="links.html">Odkazy</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <div class="subnav-container">
+            <nav class="subnav">
+                <ul>
+                    <li><a href="#abeceda"><i class="fas fa-font"></i> Japonská abeceda</a></li>
+                    <li><a href="#fraze"><i class="fas fa-language"></i> Fráze</a></li>
+                    <li><a href="#travel-category"><i class="fas fa-map-marker-alt"></i> Cestování</a></li>
+                    <li><a href="#food-category"><i class="fas fa-utensils"></i> Restaurace</a></li>
+                    <li><a href="#shopping-category"><i class="fas fa-shopping-bag"></i> Nákupy</a></li>
+                    <li><a href="#emergency-category"><i class="fas fa-exclamation-triangle"></i> Nouzové situace</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <main>
+            <section class="language-section">
+                <h2>Japonský jazyk</h2>
+
+
+
+                <!-- Japonská abeceda -->
+                <div id="abeceda" class="info-card">
+                    <div class="info-header">
+                        <h3><i class="fas fa-font"></i> Japonská abeceda</h3>
+                    </div>
+                    <div class="info-content">
+                        <p>Japonský jazyk používá tři typy písma: <strong>Hiragana</strong>, <strong>Katakana</strong> a <strong>Kanji</strong>. Hiragana a Katakana jsou slabičné abecedy, kde každý znak představuje jednu slabiku. Kanji jsou čínské znaky, které představují celá slova nebo koncepty.</p>
+
+                        <div class="alphabet-tabs">
+                            <button class="alphabet-tab" data-target="hiragana">Hiragana</button>
+                            <button class="alphabet-tab" data-target="katakana">Katakana</button>
+                            <button class="alphabet-tab" data-target="kanji">Kanji</button>
+                        </div>
+
+                        <!-- Hiragana -->
+                        <div id="hiragana" class="alphabet-content">
+                            <p>Hiragana je základní japonská abeceda používaná pro japonská slova, gramatické částice a přípony.</p>
+                            <div class="alphabet-grid">
+                                <div class="alphabet-item"><div class="alphabet-character">あ</div><div class="alphabet-romaji">a</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">い</div><div class="alphabet-romaji">i</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">う</div><div class="alphabet-romaji">u</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">え</div><div class="alphabet-romaji">e</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">お</div><div class="alphabet-romaji">o</div></div>
+
+                                <div class="alphabet-item"><div class="alphabet-character">か</div><div class="alphabet-romaji">ka</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">き</div><div class="alphabet-romaji">ki</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">く</div><div class="alphabet-romaji">ku</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">け</div><div class="alphabet-romaji">ke</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">こ</div><div class="alphabet-romaji">ko</div></div>
+
+                                <div class="alphabet-item"><div class="alphabet-character">さ</div><div class="alphabet-romaji">sa</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">し</div><div class="alphabet-romaji">shi</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">す</div><div class="alphabet-romaji">su</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">せ</div><div class="alphabet-romaji">se</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">そ</div><div class="alphabet-romaji">so</div></div>
+
+                                <div class="alphabet-item"><div class="alphabet-character">た</div><div class="alphabet-romaji">ta</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ち</div><div class="alphabet-romaji">chi</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">つ</div><div class="alphabet-romaji">tsu</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">て</div><div class="alphabet-romaji">te</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">と</div><div class="alphabet-romaji">to</div></div>
+
+                                <div class="alphabet-item"><div class="alphabet-character">な</div><div class="alphabet-romaji">na</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">に</div><div class="alphabet-romaji">ni</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ぬ</div><div class="alphabet-romaji">nu</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ね</div><div class="alphabet-romaji">ne</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">の</div><div class="alphabet-romaji">no</div></div>
+
+                                <div class="alphabet-item"><div class="alphabet-character">は</div><div class="alphabet-romaji">ha</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ひ</div><div class="alphabet-romaji">hi</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ふ</div><div class="alphabet-romaji">fu</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">へ</div><div class="alphabet-romaji">he</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ほ</div><div class="alphabet-romaji">ho</div></div>
+
+                                <div class="alphabet-item"><div class="alphabet-character">ま</div><div class="alphabet-romaji">ma</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">み</div><div class="alphabet-romaji">mi</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">む</div><div class="alphabet-romaji">mu</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">め</div><div class="alphabet-romaji">me</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">も</div><div class="alphabet-romaji">mo</div></div>
+
+                                <div class="alphabet-item"><div class="alphabet-character">や</div><div class="alphabet-romaji">ya</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ゆ</div><div class="alphabet-romaji">yu</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">よ</div><div class="alphabet-romaji">yo</div></div>
+
+                                <div class="alphabet-item"><div class="alphabet-character">ら</div><div class="alphabet-romaji">ra</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">り</div><div class="alphabet-romaji">ri</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">る</div><div class="alphabet-romaji">ru</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">れ</div><div class="alphabet-romaji">re</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ろ</div><div class="alphabet-romaji">ro</div></div>
+
+                                <div class="alphabet-item"><div class="alphabet-character">わ</div><div class="alphabet-romaji">wa</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">を</div><div class="alphabet-romaji">wo</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ん</div><div class="alphabet-romaji">n</div></div>
+                            </div>
+                        </div>
+
+                        <!-- Katakana -->
+                        <div id="katakana" class="alphabet-content">
+                            <p>Katakana se používá především pro cizí slova, zahraniční jména a pro zdůraznění.</p>
+                            <div class="alphabet-grid">
+                                <div class="alphabet-item"><div class="alphabet-character">ア</div><div class="alphabet-romaji">a</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">イ</div><div class="alphabet-romaji">i</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ウ</div><div class="alphabet-romaji">u</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">エ</div><div class="alphabet-romaji">e</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">オ</div><div class="alphabet-romaji">o</div></div>
+
+                                <div class="alphabet-item"><div class="alphabet-character">カ</div><div class="alphabet-romaji">ka</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">キ</div><div class="alphabet-romaji">ki</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ク</div><div class="alphabet-romaji">ku</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ケ</div><div class="alphabet-romaji">ke</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">コ</div><div class="alphabet-romaji">ko</div></div>
+
+                                <div class="alphabet-item"><div class="alphabet-character">サ</div><div class="alphabet-romaji">sa</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">シ</div><div class="alphabet-romaji">shi</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ス</div><div class="alphabet-romaji">su</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">セ</div><div class="alphabet-romaji">se</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ソ</div><div class="alphabet-romaji">so</div></div>
+
+                                <div class="alphabet-item"><div class="alphabet-character">タ</div><div class="alphabet-romaji">ta</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">チ</div><div class="alphabet-romaji">chi</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ツ</div><div class="alphabet-romaji">tsu</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">テ</div><div class="alphabet-romaji">te</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ト</div><div class="alphabet-romaji">to</div></div>
+
+                                <div class="alphabet-item"><div class="alphabet-character">ナ</div><div class="alphabet-romaji">na</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ニ</div><div class="alphabet-romaji">ni</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ヌ</div><div class="alphabet-romaji">nu</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ネ</div><div class="alphabet-romaji">ne</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ノ</div><div class="alphabet-romaji">no</div></div>
+
+                                <div class="alphabet-item"><div class="alphabet-character">ハ</div><div class="alphabet-romaji">ha</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ヒ</div><div class="alphabet-romaji">hi</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">フ</div><div class="alphabet-romaji">fu</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ヘ</div><div class="alphabet-romaji">he</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ホ</div><div class="alphabet-romaji">ho</div></div>
+
+                                <div class="alphabet-item"><div class="alphabet-character">マ</div><div class="alphabet-romaji">ma</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ミ</div><div class="alphabet-romaji">mi</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ム</div><div class="alphabet-romaji">mu</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">メ</div><div class="alphabet-romaji">me</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">モ</div><div class="alphabet-romaji">mo</div></div>
+
+                                <div class="alphabet-item"><div class="alphabet-character">ヤ</div><div class="alphabet-romaji">ya</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ユ</div><div class="alphabet-romaji">yu</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ヨ</div><div class="alphabet-romaji">yo</div></div>
+
+                                <div class="alphabet-item"><div class="alphabet-character">ラ</div><div class="alphabet-romaji">ra</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">リ</div><div class="alphabet-romaji">ri</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ル</div><div class="alphabet-romaji">ru</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">レ</div><div class="alphabet-romaji">re</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ロ</div><div class="alphabet-romaji">ro</div></div>
+
+                                <div class="alphabet-item"><div class="alphabet-character">ワ</div><div class="alphabet-romaji">wa</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ヲ</div><div class="alphabet-romaji">wo</div></div>
+                                <div class="alphabet-item"><div class="alphabet-character">ン</div><div class="alphabet-romaji">n</div></div>
+                            </div>
+                        </div>
+
+                        <!-- Kanji -->
+                        <div id="kanji" class="alphabet-content">
+                            <p>Kanji jsou čínské znaky používané v japonském jazyce. Existuje více než 50 000 kanji, ale pro běžné použití stačí znát asi 2 000. Zde je několik základních kanji:</p>
+                            <div class="kanji-grid">
+                                <div class="kanji-item">
+                                    <div class="kanji-character">日</div>
+                                    <div class="kanji-meaning">slunce, den</div>
+                                    <div class="kanji-reading">ni, nichi, hi</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">月</div>
+                                    <div class="kanji-meaning">měsíc</div>
+                                    <div class="kanji-reading">getsu, tsuki</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">水</div>
+                                    <div class="kanji-meaning">voda</div>
+                                    <div class="kanji-reading">sui, mizu</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">火</div>
+                                    <div class="kanji-meaning">oheň</div>
+                                    <div class="kanji-reading">ka, hi</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">木</div>
+                                    <div class="kanji-meaning">strom, dřevo</div>
+                                    <div class="kanji-reading">moku, ki</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">金</div>
+                                    <div class="kanji-meaning">zlato, kov, peníze</div>
+                                    <div class="kanji-reading">kin, kane</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">土</div>
+                                    <div class="kanji-meaning">země, půda</div>
+                                    <div class="kanji-reading">do, tsuchi</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">山</div>
+                                    <div class="kanji-meaning">hora</div>
+                                    <div class="kanji-reading">san, yama</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">川</div>
+                                    <div class="kanji-meaning">řeka</div>
+                                    <div class="kanji-reading">sen, kawa</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">人</div>
+                                    <div class="kanji-meaning">člověk</div>
+                                    <div class="kanji-reading">jin, nin, hito</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">女</div>
+                                    <div class="kanji-meaning">žena</div>
+                                    <div class="kanji-reading">jo, onna</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">男</div>
+                                    <div class="kanji-meaning">muž</div>
+                                    <div class="kanji-reading">dan, otoko</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">子</div>
+                                    <div class="kanji-meaning">dítě</div>
+                                    <div class="kanji-reading">shi, ko</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">天</div>
+                                    <div class="kanji-meaning">nebe</div>
+                                    <div class="kanji-reading">ten, ame, ama</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">地</div>
+                                    <div class="kanji-meaning">země, půda</div>
+                                    <div class="kanji-reading">chi, ji</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">入</div>
+                                    <div class="kanji-meaning">vstoupit</div>
+                                    <div class="kanji-reading">nyuu, hairu</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">出</div>
+                                    <div class="kanji-meaning">vyjít, odejít</div>
+                                    <div class="kanji-reading">shutsu, deru</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">車</div>
+                                    <div class="kanji-meaning">auto, vozidlo</div>
+                                    <div class="kanji-reading">sha, kuruma</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">食</div>
+                                    <div class="kanji-meaning">jídlo, jíst</div>
+                                    <div class="kanji-reading">shoku, taberu</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">酒</div>
+                                    <div class="kanji-meaning">alkohol, saké</div>
+                                    <div class="kanji-reading">shu, sake</div>
+                                </div>
+                                <div class="kanji-item">
+                                    <div class="kanji-character">東</div>
+                                    <div class="kanji-meaning">východ</div>
+                                    <div class="kanji-reading">tou, higashi</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Užitečné fráze -->
+                <div id="fraze" class="info-card">
+                    <div class="info-header">
+                        <h3><i class="fas fa-language"></i> Užitečné fráze</h3>
+                    </div>
+                    <div class="info-content">
+                        <table class="phrase-table">
+                            <thead>
+                                <tr>
+                                    <th>Česky</th>
+                                    <th>Japonsky (výslovnost)</th>
+                                    <th>Japonsky (znaky)</th>
+                                    <th>Poslech</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Základní fráze -->
+                                <tr class="category-header" id="basic-phrases">
+                                    <td colspan="4"><i class="fas fa-comment"></i> Základní fráze</td>
+                                </tr>
+                            <tr>
+                                <td>Dobrý den</td>
+                                <td>Konnichiwa</td>
+                                <td>こんにちは</td>
+                                <td><button class="play-button" onclick="playPhrase('こんにちは')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Dobré ráno</td>
+                                <td>Ohayou gozaimasu</td>
+                                <td>おはようございます</td>
+                                <td><button class="play-button" onclick="playPhrase('おはようございます')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Dobrý večer</td>
+                                <td>Konbanwa</td>
+                                <td>こんばんは</td>
+                                <td><button class="play-button" onclick="playPhrase('こんばんは')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Děkuji</td>
+                                <td>Arigatou gozaimasu</td>
+                                <td>ありがとうございます</td>
+                                <td><button class="play-button" onclick="playPhrase('ありがとうございます')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Děkuji mnohokrát</td>
+                                <td>Doumo arigatou gozaimasu</td>
+                                <td>どうもありがとうございます</td>
+                                <td><button class="play-button" onclick="playPhrase('どうもありがとうございます')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Prosím (když o něco žádáte)</td>
+                                <td>Onegaishimasu</td>
+                                <td>お願いします</td>
+                                <td><button class="play-button" onclick="playPhrase('お願いします')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Prosím (když něco dáváte)</td>
+                                <td>Douzo</td>
+                                <td>どうぞ</td>
+                                <td><button class="play-button" onclick="playPhrase('どうぞ')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Ano</td>
+                                <td>Hai</td>
+                                <td>はい</td>
+                                <td><button class="play-button" onclick="playPhrase('はい')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Ne</td>
+                                <td>Iie</td>
+                                <td>いいえ</td>
+                                <td><button class="play-button" onclick="playPhrase('いいえ')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Promiňte</td>
+                                <td>Sumimasen</td>
+                                <td>すみません</td>
+                                <td><button class="play-button" onclick="playPhrase('すみません')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Omlouvám se</td>
+                                <td>Gomennasai</td>
+                                <td>ごめんなさい</td>
+                                <td><button class="play-button" onclick="playPhrase('ごめんなさい')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Nerozumím</td>
+                                <td>Wakarimasen</td>
+                                <td>わかりません</td>
+                                <td><button class="play-button" onclick="playPhrase('わかりません')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Rozumím</td>
+                                <td>Wakarimashita</td>
+                                <td>わかりました</td>
+                                <td><button class="play-button" onclick="playPhrase('わかりました')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Mluvíte anglicky?</td>
+                                <td>Eigo ga hanasemasu ka?</td>
+                                <td>英語が話せますか？</td>
+                                <td><button class="play-button" onclick="playPhrase('英語が話せますか？')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Nemluvím japonsky</td>
+                                <td>Nihongo ga hanasemasen</td>
+                                <td>日本語が話せません</td>
+                                <td><button class="play-button" onclick="playPhrase('日本語が話せません')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Mluvte prosím pomalu</td>
+                                <td>Yukkuri hanashite kudasai</td>
+                                <td>ゆっくり話してください</td>
+                                <td><button class="play-button" onclick="playPhrase('ゆっくり話してください')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                                <!-- Cestování a orientace -->
+                                <tr class="category-header" id="travel-phrases" style="background-color: #e94560; color: white;">
+                                    <td colspan="4" style="color: white;" id="travel-category"><i class="fas fa-map-marker-alt"></i> Cestování a orientace</td>
+                                </tr>
+                                <tr>
+                                    <td>Kde je toaleta?</td>
+                                    <td>Toire wa doko desu ka?</td>
+                                    <td>トイレはどこですか？</td>
+                                    <td><button class="play-button" onclick="playPhrase('トイレはどこですか？')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Kde je stanice?</td>
+                                <td>Eki wa doko desu ka?</td>
+                                <td>駅はどこですか？</td>
+                                <td><button class="play-button" onclick="playPhrase('駅はどこですか？')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Jak se dostanu do...?</td>
+                                <td>...ni wa dou ikeba ii desu ka?</td>
+                                <td>...にはどう行けばいいですか？</td>
+                                <td><button class="play-button" onclick="playPhrase('にはどう行けばいいですか？')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Je to daleko?</td>
+                                <td>Tooi desu ka?</td>
+                                <td>遠いですか？</td>
+                                <td><button class="play-button" onclick="playPhrase('遠いですか？')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Kolik stojí jízdenka do...?</td>
+                                <td>...made no kippu wa ikura desu ka?</td>
+                                <td>...までの切符はいくらですか？</td>
+                                <td><button class="play-button" onclick="playPhrase('までの切符はいくらですか？')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>V kolik hodin odjíždí vlak?</td>
+                                <td>Densha wa nanji ni demasu ka?</td>
+                                <td>電車は何時に出ますか？</td>
+                                <td><button class="play-button" onclick="playPhrase('電車は何時に出ますか？')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Potřebuji mapu</td>
+                                <td>Chizu ga hitsuyou desu</td>
+                                <td>地図が必要です</td>
+                                <td><button class="play-button" onclick="playPhrase('地図が必要です')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Jsem ztracený/á</td>
+                                <td>Michi ni mayoimashita</td>
+                                <td>道に迷いました</td>
+                                <td><button class="play-button" onclick="playPhrase('道に迷いました')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                                <!-- Restaurace a jídlo -->
+                                <tr class="category-header" id="food-phrases">
+                                    <td colspan="4" id="food-category"><i class="fas fa-utensils"></i> Restaurace a jídlo</td>
+                                </tr>
+                                <tr>
+                                <td>Stůl pro ... osoby, prosím</td>
+                                <td>...nin-you no seki wo onegaishimasu</td>
+                                <td>...人用の席をお願いします</td>
+                                <td><button class="play-button" onclick="playPhrase('人用の席をお願いします')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Máte jídelní lístek v angličtině?</td>
+                                <td>Eigo no menu wa arimasu ka?</td>
+                                <td>英語のメニューはありますか？</td>
+                                <td><button class="play-button" onclick="playPhrase('英語のメニューはありますか？')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Co doporučujete?</td>
+                                <td>Osusume wa nan desu ka?</td>
+                                <td>おすすめは何ですか？</td>
+                                <td><button class="play-button" onclick="playPhrase('おすすめは何ですか？')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Jsem vegetarián/ka</td>
+                                <td>Watashi wa bejitarian desu</td>
+                                <td>私はベジタリアンです</td>
+                                <td><button class="play-button" onclick="playPhrase('私はベジタリアンです')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Mám alergii na...</td>
+                                <td>...ni arerugii ga arimasu</td>
+                                <td>...にアレルギーがあります</td>
+                                <td><button class="play-button" onclick="playPhrase('にアレルギーがあります')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Vodu, prosím</td>
+                                <td>Mizu wo onegaishimasu</td>
+                                <td>水をお願いします</td>
+                                <td><button class="play-button" onclick="playPhrase('水をお願いします')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Kolik to stojí?</td>
+                                <td>Ikura desu ka?</td>
+                                <td>いくらですか？</td>
+                                <td><button class="play-button" onclick="playPhrase('いくらですか？')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Prosím účet</td>
+                                <td>Okaikei onegaishimasu</td>
+                                <td>お会計お願いします</td>
+                                <td><button class="play-button" onclick="playPhrase('お会計お願いします')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Bylo to výborné</td>
+                                <td>Oishikatta desu</td>
+                                <td>美味しかったです</td>
+                                <td><button class="play-button" onclick="playPhrase('美味しかったです')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                                <!-- Nákupy -->
+                                <tr class="category-header" id="shopping-phrases">
+                                    <td colspan="4" id="shopping-category"><i class="fas fa-shopping-bag"></i> Nákupy</td>
+                                </tr>
+                                <tr>
+                                <td>Kolik to stojí?</td>
+                                <td>Ikura desu ka?</td>
+                                <td>いくらですか？</td>
+                                <td><button class="play-button" onclick="playPhrase('いくらですか？')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Je to příliš drahé</td>
+                                <td>Chotto takai desu</td>
+                                <td>ちょっと高いです</td>
+                                <td><button class="play-button" onclick="playPhrase('ちょっと高いです')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Můžete mi dát slevu?</td>
+                                <td>Waribiki dekimasu ka?</td>
+                                <td>割引できますか？</td>
+                                <td><button class="play-button" onclick="playPhrase('割引できますか？')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Koupím si to</td>
+                                <td>Kore wo kaimasu</td>
+                                <td>これを買います</td>
+                                <td><button class="play-button" onclick="playPhrase('これを買います')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Máte to ve větší/menší velikosti?</td>
+                                <td>Motto ookii/chiisai saizu wa arimasu ka?</td>
+                                <td>もっと大きい/小さいサイズはありますか？</td>
+                                <td><button class="play-button" onclick="playPhrase('もっと大きいサイズはありますか？')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Mohu si to vyzkoušet?</td>
+                                <td>Shichaku dekimasu ka?</td>
+                                <td>試着できますか？</td>
+                                <td><button class="play-button" onclick="playPhrase('試着できますか？')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                                <!-- Nouzové situace -->
+                                <tr class="category-header" id="emergency-phrases" style="background-color: #e94560; color: white;">
+                                    <td colspan="4" style="color: white;" id="emergency-category"><i class="fas fa-exclamation-triangle"></i> Nouzové situace</td>
+                                </tr>
+                                <tr>
+                                <td>Pomoc!</td>
+                                <td>Tasukete!</td>
+                                <td>助けて！</td>
+                                <td><button class="play-button" onclick="playPhrase('助けて！')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Zavolejte policii!</td>
+                                <td>Keisatsu wo yonde kudasai!</td>
+                                <td>警察を呼んでください！</td>
+                                <td><button class="play-button" onclick="playPhrase('警察を呼んでください！')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Zavolejte záchranku!</td>
+                                <td>Kyuukyuusha wo yonde kudasai!</td>
+                                <td>救急車を呼んでください！</td>
+                                <td><button class="play-button" onclick="playPhrase('救急車を呼んでください！')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Jsem nemocný/á</td>
+                                <td>Byouki desu</td>
+                                <td>病気です</td>
+                                <td><button class="play-button" onclick="playPhrase('病気です')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Potřebuji lékaře</td>
+                                <td>Isha ga hitsuyou desu</td>
+                                <td>医者が必要です</td>
+                                <td><button class="play-button" onclick="playPhrase('医者が必要です')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Kde je nejbližší nemocnice?</td>
+                                <td>Ichiban chikai byouin wa doko desu ka?</td>
+                                <td>一番近い病院はどこですか？</td>
+                                <td><button class="play-button" onclick="playPhrase('一番近い病院はどこですか？')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Ztratil/a jsem se</td>
+                                <td>Michi ni mayoimashita</td>
+                                <td>道に迷いました</td>
+                                <td><button class="play-button" onclick="playPhrase('道に迷いました')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Ztratil/a jsem peněženku/pas</td>
+                                <td>Saifu/pasupōto wo nakushimashita</td>
+                                <td>財布/パスポートをなくしました</td>
+                                <td><button class="play-button" onclick="playPhrase('財布をなくしました')"><i class="fas fa-volume-up"></i></button></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2025 Japonský cestovní průvodce</p>
+        </footer>
+    </div>
+</body>
+</html>
+

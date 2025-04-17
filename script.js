@@ -386,8 +386,15 @@ function setupSubnavHighlighting() {
 // Mobile Menu Setup
 function setupMobileMenu() {
     // Nastavíme globální proměnnou, aby menu.js věděl, že menu již bylo inicializováno
-    window.setupMobileMenuCalled = true;
+    window.mobileMenuInitialized = true;
 
+    // Pokud je k dispozici funkce initMobileMenu z menu.js, použijeme ji
+    if (typeof initMobileMenu === 'function') {
+        initMobileMenu();
+        return;
+    }
+
+    // Jinak použijeme vlastní implementaci
     const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
     const mainNav = document.getElementById('main-nav');
     const menuOverlay = document.getElementById('menu-overlay');

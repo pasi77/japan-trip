@@ -1,65 +1,69 @@
 // Samostatný JavaScript soubor pro ovládání hamburger menu
-// Tento soubor slouží jako záložní pro případ, že by script.js nebyl načten
-// Kontrolujeme, zda již existuje funkce setupMobileMenu v globálním kontextu
-if (typeof window.setupMobileMenuCalled === 'undefined') {
-    // Nastavíme globální proměnnou, abychom věděli, že menu.js byl zavolán
-    window.menuJsLoaded = true;
+// Tento soubor funguje nezávisle na script.js
 
-    // Funkce pro inicializaci mobilního menu
-    function initMobileMenu() {
-        // Kontrola, zda již nebylo menu inicializováno pomocí script.js
-        if (window.setupMobileMenuCalled) {
-            return;
-        }
+// Funkce pro inicializaci mobilního menu
+function initMobileMenu() {
+    // Pokud již bylo menu inicializováno, nebudeme ho inicializovat znovu
+    if (window.mobileMenuInitialized) {
+        return;
+    }
 
-        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-        const mainNav = document.getElementById('main-nav');
-        const menuOverlay = document.getElementById('menu-overlay');
+    // Nastavíme globální proměnnou, abychom věděli, že menu již bylo inicializováno
+    window.mobileMenuInitialized = true;
 
-        if (!mobileMenuToggle || !mainNav || !menuOverlay) {
-            // Pokud nejsou elementy k dispozici, zkusíme to znovu za chvíli
-            setTimeout(initMobileMenu, 100);
-            return;
-        }
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const mainNav = document.getElementById('main-nav');
+    const menuOverlay = document.getElementById('menu-overlay');
 
-        const navLinks = document.querySelectorAll('.main-nav a');
+    if (!mobileMenuToggle || !mainNav || !menuOverlay) {
+        // Pokud nejsou elementy k dispozici, zkusíme to znovu za chvíli
+        setTimeout(initMobileMenu, 100);
+        return;
+    }
 
-        // Toggle menu when hamburger icon is clicked
-        mobileMenuToggle.addEventListener('click', function() {
-            mainNav.classList.toggle('active');
-            menuOverlay.classList.toggle('active');
-            document.body.classList.toggle('menu-open');
-        });
+    const navLinks = document.querySelectorAll('.main-nav a');
 
-        // Close menu when overlay is clicked
-        menuOverlay.addEventListener('click', function() {
+    // Toggle menu when hamburger icon is clicked
+    mobileMenuToggle.addEventListener('click', function() {
+        mainNav.classList.toggle('active');
+        menuOverlay.classList.toggle('active');
+        document.body.classList.toggle('menu-open');
+    });
+
+    // Close menu when overlay is clicked
+    menuOverlay.addEventListener('click', function() {
+        mainNav.classList.remove('active');
+        menuOverlay.classList.remove('active');
+        document.body.classList.remove('menu-open');
+    });
+
+    // Close menu when a link is clicked
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
             mainNav.classList.remove('active');
             menuOverlay.classList.remove('active');
             document.body.classList.remove('menu-open');
         });
+    });
 
-        // Close menu when a link is clicked
-        navLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                mainNav.classList.remove('active');
-                menuOverlay.classList.remove('active');
-                document.body.classList.remove('menu-open');
-            });
-        });
-
-        // Close menu when Escape key is pressed
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && mainNav.classList.contains('active')) {
-                mainNav.classList.remove('active');
-                menuOverlay.classList.remove('active');
-                document.body.classList.remove('menu-open');
-            }
-        });
-    }
-
-    // Spustíme inicializaci ihned
-    initMobileMenu();
-
-    // A také po načtení DOMContentu pro jistotu
-    document.addEventListener('DOMContentLoaded', initMobileMenu);
+    // Close menu when Escape key is pressed
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && mainNav.classList.contains('active')) {
+            mainNav.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            document.body.classList.remove('menu-open');
+        }
+    });
 }
+
+// Spustíme inicializaci ihned
+if (document.readyState === 'loading') {
+    // Pokud se dokument ještě načítá, počkáme na událost DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+} else {
+    // Pokud je dokument již načten, spustíme inicializaci ihned
+    initMobileMenu();
+}
+
+// Pro jistotu zkusíme inicializovat menu ještě po 500ms
+setTimeout(initMobileMenu, 500);

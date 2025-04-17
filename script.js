@@ -433,4 +433,47 @@ function setupMobileMenu() {
             document.body.classList.remove('menu-open');
         }
     });
+
+    // Setup submenu toggle
+    setupSubmenuToggle();
+}
+
+// Submenu Toggle Setup
+function setupSubmenuToggle() {
+    const submenuToggle = document.getElementById('submenu-toggle');
+    const subnavContainer = document.getElementById('subnav-container');
+
+    if (!submenuToggle || !subnavContainer) return;
+
+    // Toggle submenu when button is clicked
+    submenuToggle.addEventListener('click', function() {
+        subnavContainer.classList.toggle('active');
+        this.classList.toggle('active');
+
+        // Toggle icon
+        const icon = this.querySelector('i');
+        if (this.classList.contains('active')) {
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+        } else {
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
+        }
+    });
+
+    // Close submenu when a link is clicked
+    const subnavLinks = document.querySelectorAll('.subnav a');
+    subnavLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 576) { // Pouze na mobilních zařízeních
+                subnavContainer.classList.remove('active');
+                submenuToggle.classList.remove('active');
+
+                // Reset icon
+                const icon = submenuToggle.querySelector('i');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        });
+    });
 }

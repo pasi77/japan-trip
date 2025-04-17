@@ -1,4 +1,4 @@
-// Samostatný JavaScript soubor pro ovládání hamburger menu
+// Samostatný JavaScript soubor pro ovládání hamburger menu a submenu
 // Tento soubor funguje nezávisle na script.js
 
 // Funkce pro inicializaci mobilního menu
@@ -54,6 +54,42 @@ function initMobileMenu() {
             document.body.classList.remove('menu-open');
         }
     });
+
+    // Inicializace submenu pro mobilní zařízení
+    initSubmenu();
+}
+
+// Funkce pro inicializaci submenu
+function initSubmenu() {
+    const submenuToggle = document.getElementById('submenu-toggle');
+    const subnavContainer = document.getElementById('subnav-container');
+
+    if (!submenuToggle || !subnavContainer) {
+        // Pokud nejsou elementy k dispozici, zkusíme to znovu za chvíli
+        setTimeout(initSubmenu, 100);
+        return;
+    }
+
+    // Toggle submenu when button is clicked
+    submenuToggle.addEventListener('click', function() {
+        subnavContainer.classList.toggle('active');
+        submenuToggle.classList.toggle('active');
+    });
+
+    // Close submenu when a link in it is clicked
+    const subnavLinks = document.querySelectorAll('.subnav a');
+    subnavLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            subnavContainer.classList.remove('active');
+            submenuToggle.classList.remove('active');
+        });
+    });
+
+    // Kontrola, zda je na stránce submenu
+    // Pokud není, skryjeme tlačítko pro zobrazení submenu
+    if (subnavLinks.length === 0) {
+        submenuToggle.style.display = 'none';
+    }
 }
 
 // Spustíme inicializaci ihned

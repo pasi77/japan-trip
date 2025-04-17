@@ -208,6 +208,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 20px; /* Stejný padding jako u subnav */
 }
 
 /* Ensure header without container also has proper layout */
@@ -243,6 +244,10 @@ header > .main-nav {
 }
 
 /* Main Navigation */
+.main-nav {
+    flex: 1; /* Zabere všechnu dostupnou šířku */
+}
+
 .main-nav ul {
     display: flex;
     list-style: none;

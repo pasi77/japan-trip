@@ -2587,15 +2587,15 @@ footer {
         position: fixed;
         top: 0;
         right: -100%;
-        width: 70%; /* Zmenšeno z 80% */
-        max-width: 250px; /* Zmenšeno z 300px */
+        width: 60%; /* Zmenšeno z 70% */
+        max-width: 220px; /* Zmenšeno z 250px */
         height: auto; /* Změněno z 100vh na auto */
-        max-height: 80vh; /* Omezení maximální výšky */
+        max-height: 70vh; /* Omezení maximální výšky - zmenšeno z 80vh */
         background-color: var(--secondary-color);
         z-index: 1000;
         transition: right 0.3s ease;
         box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
-        padding: 60px 15px 15px; /* Zmenšeno odsazení */
+        padding: 50px 10px 10px; /* Zmenšeno odsazení */
         overflow-y: auto;
         border-radius: 0 0 0 10px; /* Zaoblení levého dolního rohu */
     }
@@ -2610,16 +2610,16 @@ footer {
     }
 
     .main-nav li {
-        margin: 5px 0; /* Zmenšeno z 10px na 5px */
+        margin: 2px 0; /* Zmenšeno z 5px na 2px */
         width: 100%;
     }
 
     .main-nav a {
         display: block;
-        padding: 8px 12px; /* Zmenšeno z 12px 15px na 8px 12px */
+        padding: 6px 10px; /* Zmenšeno z 8px 12px na 6px 10px */
         width: 100%;
         border-radius: 4px;
-        font-size: 1rem; /* Zmenšeno z 1.1rem na 1rem */
+        font-size: 0.95rem; /* Zmenšeno z 1rem na 0.95rem */
     }
 
     main {
@@ -2745,7 +2745,7 @@ footer {
         border-bottom: 1px solid #ddd;
         display: none;
         transition: all 0.3s ease;
-        max-height: 300px;
+        max-height: 250px; /* Zmenšeno z 300px */
         overflow-y: auto;
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     }
@@ -2756,7 +2756,7 @@ footer {
 
     .subnav ul {
         flex-direction: column;
-        padding: 5px 0;
+        padding: 3px 0; /* Zmenšeno z 5px 0 */
     }
 
     .subnav li {
@@ -2765,10 +2765,10 @@ footer {
     }
 
     .subnav a {
-        padding: 8px 15px;
+        padding: 6px 12px; /* Zmenšeno z 8px 15px */
         border-bottom: none;
         border-left: 3px solid transparent;
-        font-size: 0.9rem;
+        font-size: 0.85rem; /* Zmenšeno z 0.9rem */
     }
 
     .subnav a:hover,
@@ -2828,7 +2828,7 @@ footer {
 
     /* Speciální výjimka pro položky menu */
     .main-nav a {
-        min-height: 36px; /* Menší výška pro položky menu */
+        min-height: 32px; /* Menší výška pro položky menu - zmenšeno z 36px */
     }
 
     input[type="checkbox"],
@@ -2838,7 +2838,7 @@ footer {
 
     /* Increase spacing for better touch targets */
     .main-nav li {
-        margin: 3px 0; /* Ještě menší mezery pro menší obrazovky */
+        margin: 1px 0; /* Ještě menší mezery pro menší obrazovky - zmenšeno z 3px */
     }
 
     /* Adjust font sizes for better readability on small screens */

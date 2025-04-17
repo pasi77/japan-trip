@@ -17,10 +17,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Setup subnav highlighting
     setupSubnavHighlighting();
-
-    // Setup mobile menu
-    setupMobileMenu();
 });
+
+// Setup mobile menu - volá se okamžitě, bez ohledu na DOMContentLoaded
+setupMobileMenu();
 
 // Countdown Timer Function
 function updateCountdown() {

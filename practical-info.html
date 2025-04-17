@@ -340,6 +340,39 @@
             <p>&copy; 2025 Japonský cestovní průvodce</p>
         </footer>
     </div>
+    <script>
+        // Inline JavaScript pro ovládání hamburger menu
+        (function() {
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            const mainNav = document.getElementById('main-nav');
+            const menuOverlay = document.getElementById('menu-overlay');
+            const navLinks = document.querySelectorAll('.main-nav a');
+
+            if (mobileMenuToggle && mainNav && menuOverlay) {
+                // Toggle menu when hamburger icon is clicked
+                mobileMenuToggle.addEventListener('click', function() {
+                    mainNav.classList.toggle('active');
+                    menuOverlay.classList.toggle('active');
+                    document.body.classList.toggle('menu-open');
+                });
+
+                // Close menu when overlay is clicked
+                menuOverlay.addEventListener('click', function() {
+                    mainNav.classList.remove('active');
+                    menuOverlay.classList.remove('active');
+                    document.body.classList.remove('menu-open');
+                });
+
+                // Close menu when a link is clicked
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        mainNav.classList.remove('active');
+                        menuOverlay.classList.remove('active');
+                        document.body.classList.remove('menu-open');
+                    });
+                });
+            }
+        })();
+    </script>
 </body>
 </html>
-

@@ -1,5 +1,5 @@
 # Ignorovat konfigurační soubor s citlivými údaji
-config.js
+# config.js - dočasně povoleno pro testování
 
 # Ignorovat soubory operačního systému
 .DS_Store

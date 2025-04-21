@@ -1,19 +1,12 @@
-// Konfigurace Google API
-const API_KEY = 'VAŠE_API_KEY';
-const CLIENT_ID = 'VAŠE_CLIENT_ID';
+// Konstanty pro Google API
 const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
 const SCOPES = 'https://www.googleapis.com/auth/drive.readonly';
 
-// ID složek v Google Drive (nahraďte skutečnými ID)
-const FOLDERS = {
-    flights: 'ID_SLOŽKY_S_LETENKAMI',
-    accommodation: 'ID_SLOŽKY_S_UBYTOVÁNÍM',
-    tickets: 'ID_SLOŽKY_SE_VSTUPENKAMI',
-    other: 'ID_SLOŽKY_S_OSTATNÍMI_DOKUMENTY'
-};
-
-// Seznam povolených emailů (v produkci by měl být na serveru)
-const ALLOWED_EMAILS = ['vas@email.cz'];
+// Proměnné pro konfiguraci, které budou načteny z config.js
+let API_KEY;
+let CLIENT_ID;
+let FOLDERS;
+let ALLOWED_EMAILS;
 
 let tokenClient;
 let gapiInited = false;
@@ -64,15 +57,15 @@ function handleAuthClick() {
             console.error('Chyba při přihlašování:', resp);
             return;
         }
-        
+
         // Získání informací o uživateli
         try {
             const response = await gapi.client.drive.about.get({
                 fields: 'user'
             });
-            
+
             const email = response.result.user.emailAddress;
-            
+
             // Kontrola, zda je email v seznamu povolených
             if (ALLOWED_EMAILS.includes(email)) {
                 userProfile = {
@@ -80,17 +73,17 @@ function handleAuthClick() {
                     email: email,
                     imageUrl: response.result.user.photoLink
                 };
-                
+
                 // Zobrazení sekce s dokumenty
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('documents-section').style.display = 'block';
-                
+
                 // Nastavení informací o uživateli
                 document.getElementById('user-name').textContent = userProfile.name;
                 if (userProfile.imageUrl) {
                     document.getElementById('user-avatar').src = userProfile.imageUrl;
                 }
-                
+
                 // Načtení dokumentů
                 loadAllDocuments();
             } else {
@@ -117,7 +110,7 @@ function handleSignoutClick() {
     if (token !== null) {
         google.accounts.oauth2.revoke(token.access_token);
         gapi.client.setToken('');
-        
+
         document.getElementById('login-section').style.display = 'block';
         document.getElementById('documents-section').style.display = 'none';
         userProfile = null;
@@ -150,13 +143,13 @@ async function loadDocumentsForCategory(folderKey, containerId) {
             fields: 'files(id, name, mimeType, webViewLink, thumbnailLink, createdTime)',
             orderBy: 'createdTime desc'
         });
-        
+
         const files = response.result.files;
         const container = document.getElementById(containerId);
-        
+
         if (files && files.length > 0) {
             container.innerHTML = '';
-            
+
             files.forEach(file => {
                 const card = createDocumentCard(file);
                 container.appendChild(card);
@@ -175,7 +168,7 @@ async function loadDocumentsForCategory(folderKey, containerId) {
 function createDocumentCard(file) {
     const card = document.createElement('div');
     card.className = 'document-card';
-    
+
     // Ikona podle typu souboru
     let iconClass = 'fas fa-file';
     if (file.mimeType === 'application/pdf') {
@@ -187,11 +180,11 @@ function createDocumentCard(file) {
     } else if (file.mimeType.includes('document')) {
         iconClass = 'fas fa-file-word';
     }
-    
+
     // Formátování data
     const createdDate = new Date(file.createdTime);
     const formattedDate = createdDate.toLocaleDateString('cs-CZ');
-    
+
     card.innerHTML = `
         <div class="document-icon">
             <i class="${iconClass}"></i>
@@ -202,7 +195,7 @@ function createDocumentCard(file) {
             <a href="${file.webViewLink}" class="document-link" target="_blank">Zobrazit dokument</a>
         </div>
     `;
-    
+
     return card;
 }
 
@@ -210,10 +203,28 @@ function createDocumentCard(file) {
  * Inicializace po načtení stránky
  */
 document.addEventListener('DOMContentLoaded', function() {
+    // Kontrola, zda je CONFIG definován
+    if (typeof CONFIG === 'undefined') {
+        showError('Konfigurační soubor nebyl nalezen. Kontaktujte správce webu.');
+        return;
+    }
+
+    // Načtení hodnot z konfigurace
+    API_KEY = CONFIG.API_KEY;
+    CLIENT_ID = CONFIG.CLIENT_ID;
+    FOLDERS = CONFIG.FOLDERS;
+    ALLOWED_EMAILS = CONFIG.ALLOWED_EMAILS;
+
+    // Kontrola, zda jsou všechny potřebné hodnoty definovány
+    if (!API_KEY || !CLIENT_ID || !FOLDERS || !ALLOWED_EMAILS) {
+        showError('Konfigurační soubor je nekompletní. Kontaktujte správce webu.');
+        return;
+    }
+
     // Připojení událostí
     document.getElementById('googleSignInButton').addEventListener('click', handleAuthClick);
     document.getElementById('logout-button').addEventListener('click', handleSignoutClick);
-    
+
     // Načtení Google API
     const scriptGapi = document.createElement('script');
     scriptGapi.src = 'https://apis.google.com/js/api.js';
@@ -221,10 +232,24 @@ document.addEventListener('DOMContentLoaded', function() {
         gapi.load('client', initializeGapiClient);
     };
     document.head.appendChild(scriptGapi);
-    
+
     // Načtení Google Identity Services
     const scriptGis = document.createElement('script');
     scriptGis.src = 'https://accounts.google.com/gsi/client';
     scriptGis.onload = gisInit;
     document.head.appendChild(scriptGis);
 });
+
+/**
+ * Zobrazí chybovou hlášku
+ */
+function showError(message) {
+    const loginSection = document.getElementById('login-section');
+    loginSection.innerHTML = `
+        <div style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+            <h3 style="margin-top: 0;"><i class="fas fa-exclamation-triangle"></i> Chyba</h3>
+            <p>${message}</p>
+            <p>Zkuste stránku obnovit nebo kontaktujte správce webu.</p>
+        </div>
+    `;
+}

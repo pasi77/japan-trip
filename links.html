@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Užitečné odkazy - Japonský cestovní průvodce</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="script.js"></script>
+    <script src="menu.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scrolling for subnav links
+            document.querySelectorAll('.subnav a').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+
+                    if (targetElement) {
+                        // Adjust offset for fixed header and subnav
+                        const offset = 90;
+                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - offset;
+
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+
+                        // Update active class in subnav
+                        document.querySelectorAll('.subnav a').forEach(a => a.classList.remove('active'));
+                        this.classList.add('active');
+                    }
+                });
+            });
+
+            // Highlight active section on scroll
+            window.addEventListener('scroll', function() {
+                const scrollPosition = window.scrollY;
+
+                // Get all sections
+                const sections = [
+                    document.getElementById('itineraries'),
+                    document.getElementById('activities'),
+                    document.getElementById('official')
+                ];
+
+                // Find the current section
+                let currentSection = null;
+
+                sections.forEach(section => {
+                    if (section) {
+                        const sectionTop = section.offsetTop - 100;
+                        const sectionBottom = sectionTop + section.offsetHeight;
+
+                        if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                            currentSection = section.id;
+                        }
+                    }
+                });
+
+                // Update active class in subnav
+                if (currentSection) {
+                    document.querySelectorAll('.subnav a').forEach(a => {
+                        a.classList.remove('active');
+                        if (a.getAttribute('href') === '#' + currentSection) {
+                            a.classList.add('active');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <style>
+        .links-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .link-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .link-image {
+            width: 100%;
+            height: 140px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .link-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .link-card:hover .link-image img {
+            transform: scale(1.05);
+        }
+
+        .link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .link-header {
+            background-color: #0f3460;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .link-header i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+            color: white !important;
+        }
+
+        .link-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white !important;
+        }
+
+        .link-content {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .link-description {
+            margin-bottom: 15px;
+            line-height: 1.5;
+            flex-grow: 1;
+            font-size: 0.9rem;
+        }
+
+        .link-button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            margin-top: auto;
+            font-size: 0.9rem;
+        }
+
+        .link-button:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .link-category {
+            margin-bottom: 40px;
+        }
+
+        .link-category h3 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <header>
+            <div class="header-container">
+                <div class="logo">
+                    <img src="https://cdn-icons-png.freepik.com/512/7848/7848088.png" alt="Japonsko logo - torii brána">
+                    <h1>Japonsko 2025</h1>
+                </div>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="main-nav" id="main-nav">
+                    <ul>
+                        <li><a href="index.html">Úvod</a></li>
+                        <li><a href="itinerary.html">Itinerář</a></li>
+                        <li><a href="budget.html">Rozpočet</a></li>
+                        <li><a href="practical-info.html">Tipy</a></li>
+                        <li><a href="language.html">Jazyk</a></li>
+                        <li><a href="maps-japan-leaflet.html">Mapy</a></li>
+                        <li><a href="weather.html">Počasí</a></li>
+                        <li><a href="food.html">Jídlo</a></li>
+                        <li><a href="links.html" class="active">Odkazy</a></li>
+                        <li><a href="secure.html">Dokumenty</a></li>
+                    </ul>
+                </nav>
+                <div class="menu-overlay" id="menu-overlay"></div>
+            </div>
+        </header>
+
+        <button class="submenu-toggle" id="submenu-toggle">
+            Odkazy <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="subnav-container" id="subnav-container">
+            <nav class="subnav">
+                <ul>
+                    <li><a href="#itineraries" class="active"><i class="fas fa-route"></i> Itineráře a blogy</a></li>
+                    <li><a href="#activities"><i class="fas fa-hiking"></i> Aktivity a výlety</a></li>
+                    <li><a href="#official"><i class="fas fa-info-circle"></i> Oficiální informace</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <main>
+            <section class="links-section">
+                <h2>Užitečné odkazy</h2>
+                <p class="section-intro">Sbírka užitečných odkazů pro vaši cestu do Japonska. Najdete zde inspiraci pro plánování itineráře, tipy od cestovatelů a další praktické informace.</p>
+
+                <!-- Itineráře a cestovatelské blogy -->
+                <div class="link-category" id="itineraries">
+                    <h3><i class="fas fa-route"></i> Itineráře a cestovatelské blogy</h3>
+                    <div class="links-grid">
+                        <div class="link-card">
+                            <div class="link-image">
+                                <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=1000&auto=format&fit=crop" alt="Fushimi Inari Taisha v Kjótu">
+                            </div>
+                            <div class="link-header">
+                                <i class="fas fa-plane" style="color: white;"></i>
+                                <h3 style="color: white;">Letím do Japonska</h3>
+                            </div>
+                            <div class="link-content">
+                                <p class="link-description">Podrobný itinerář pro cestu do Japonska s praktickými tipy, doporučeními na ubytování a informacemi o dopravě. Ideální pro první návštěvu Japonska.</p>
+                                <a href="https://www.letimdojaponska.cz/itinerar/" target="_blank" class="link-button">Navštívit stránku</a>
+                            </div>
+                        </div>
+
+                        <div class="link-card">
+                            <div class="link-image">
+                                <img src="https://images.unsplash.com/photo-1545569341-9eb8b30979d9?q=80&w=1000&auto=format&fit=crop" alt="Japonsko - pohled na horu Fuji">
+                            </div>
+                            <div class="link-header">
+                                <i class="fas fa-globe-asia" style="color: white;"></i>
+                                <h3 style="color: white;">Za Horizont</h3>
+                            </div>
+                            <div class="link-content">
+                                <p class="link-description">Třítýdenní itinerář po Japonsku s detailním popisem navštívených míst, včetně méně známých lokalit mimo hlavní turistické trasy.</p>
+                                <a href="https://zahorizont.cz/itinerar-3-tydny-v-japonsku/" target="_blank" class="link-button">Navštívit stránku</a>
+                            </div>
+                        </div>
+
+                        <div class="link-card">
+                            <div class="link-image">
+                                <img src="https://images.unsplash.com/photo-1607619662634-3ac55ec0e216?q=80&w=1000&auto=format&fit=crop" alt="Bambusový les v Arašijamě">
+                            </div>
+                            <div class="link-header">
+                                <i class="fas fa-suitcase-rolling" style="color: white;"></i>
+                                <h3 style="color: white;">Katka Cestuje</h3>
+                            </div>
+                            <div class="link-content">
+                                <p class="link-description">Dvoutýdenní itinerář po Japonsku s tipy na nejlepší místa, která stojí za návštěvu. Obsahuje praktické rady pro cestovatele s omezeným časem.</p>
+                                <a href="https://katkacestuje.cz/dva-tydny-v-japonsku" target="_blank" class="link-button">Navštívit stránku</a>
+                            </div>
+                        </div>
+
+                        <div class="link-card">
+                            <div class="link-image">
+                                <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?q=80&w=1000&auto=format&fit=crop" alt="Japonský cestovní deník">
+                            </div>
+                            <div class="link-header">
+                                <i class="fas fa-book-open" style="color: white;"></i>
+                                <h3 style="color: white;">Co mi udělalo radost</h3>
+                            </div>
+                            <div class="link-content">
+                                <p class="link-description">Cestovatelský deník z Japonska s osobními zážitky, fotografiemi a tipy na místa, která nejsou v běžných průvodcích. Autentický pohled na japonskou kulturu.</p>
+                                <a href="https://www.comiudelaloradost.cz/2023/04/travel-diary-japonsko.html" target="_blank" class="link-button">Navštívit stránku</a>
+                            </div>
+                        </div>
+
+
+
+                        <div class="link-card">
+                            <div class="link-image">
+                                <img src="https://images.unsplash.com/photo-1526481280693-3bfa7568e0f3?q=80&w=1000&auto=format&fit=crop" alt="Balíme se do Japonska">
+                            </div>
+                            <div class="link-header">
+                                <i class="fas fa-torii-gate" style="color: white;"></i>
+                                <h3 style="color: white;">Yatta.cz</h3>
+                            </div>
+                            <div class="link-content">
+                                <p class="link-description">Praktické tipy před odletem do Japonska - co si zabalit, jak se připravit a na co nezapomenout. Užitečné informace pro první návštěvníky Japonska.</p>
+                                <a href="https://www.yatta.cz/2024/09/pred-odletem/" target="_blank" class="link-button">Navštívit stránku</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aktivity a výlety -->
+                <div class="link-category" id="activities">
+                    <h3><i class="fas fa-hiking"></i> Aktivity a výlety</h3>
+                    <div class="links-grid">
+                        <div class="link-card">
+                            <div class="link-image">
+                                <img src="https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?q=80&w=1000&auto=format&fit=crop" alt="Hora Fuji a Hakone">
+                            </div>
+                            <div class="link-header">
+                                <i class="fas fa-mountain" style="color: white;"></i>
+                                <h3 style="color: white;">Výlet na horu Fuji a do Hakone</h3>
+                            </div>
+                            <div class="link-content">
+                                <p class="link-description">Soukromý celodenní výlet z Tokia na horu Fuji a do oblasti Hakone. Možnost rezervace průvodce a dopravy pro pohodlné poznávání těchto ikonických míst.</p>
+                                <a href="https://www.getyourguide.com/cs-cz/tokio-l193/z-tokia-soukromy-celodenni-vylet-na-horu-fudzi-a-do-hakone-t765046/?visitor-id=8AF557108E334B2FBD90BBAC67DCC368&locale_autoredirect_optout=true" target="_blank" class="link-button">Navštívit stránku</a>
+                            </div>
+                        </div>
+
+                        <div class="link-card">
+                            <div class="link-image">
+                                <img src="https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?q=80&w=1000&auto=format&fit=crop" alt="Japonský vlak">
+                            </div>
+                            <div class="link-header">
+                                <i class="fas fa-train" style="color: white;"></i>
+                                <h3 style="color: white;">Shonan Monorail</h3>
+                            </div>
+                            <div class="link-content">
+                                <p class="link-description">Informace o unikátní zavěšené jednokolejce Shonan, která spojuje stanici Ōfuna s poloostrovem Enoshima. Zajímavý dopravní prostředek s krásnými výhledy.</p>
+                                <a href="https://en.wikipedia.org/wiki/Shonan_Monorail" target="_blank" class="link-button">Navštívit stránku</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Oficiální informace -->
+                <div class="link-category" id="official">
+                    <h3><i class="fas fa-info-circle"></i> Oficiální informace</h3>
+                    <div class="links-grid">
+                        <div class="link-card">
+                            <div class="link-image">
+                                <img src="https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?q=80&w=1000&auto=format&fit=crop" alt="Japonský pas a vízum">
+                            </div>
+                            <div class="link-header">
+                                <i class="fas fa-passport" style="color: white;"></i>
+                                <h3 style="color: white;">Visit Japan Web</h3>
+                            </div>
+                            <div class="link-content">
+                                <p class="link-description">Oficiální portál japonské vlády pro návštěvníky Japonska. Umožňuje digitální vyplnění imigračních a celních formulářů před příjezdem, což urychluje proces vstupu do země.</p>
+                                <a href="https://www.vjw.digital.go.jp/main/#/vjwplo001" target="_blank" class="link-button">Navštívit stránku</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2025 Japonský cestovní průvodce</p>
+        </footer>
+    </div>
+</body>
+</html>
+

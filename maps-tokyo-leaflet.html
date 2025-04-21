@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Tokia - Japonský cestovní průvodce</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script src="script.js"></script>
+    <script src="menu.js"></script>
+    <style>
+        /* Řešení problému s poskakováním stránky */
+        body {
+            padding-right: 0 !important;
+        }
+
+        .maps-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .map-section {
+            margin-bottom: 40px;
+        }
+
+        .map-header {
+            background-color: #0f3460;
+            color: white;
+            padding: 15px;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .map-content {
+            background-color: white;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            padding: 0;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .map-wrapper {
+            width: 100%;
+            height: 500px;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .poi-list {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .poi-category {
+            margin-bottom: 20px;
+        }
+
+        .poi-category h3 {
+            color: #0f3460;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .poi-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .poi-item:hover {
+            color: #e94560;
+        }
+
+        .poi-item.active {
+            color: #e94560;
+            font-weight: 500;
+        }
+
+        .poi-item i {
+            margin-right: 8px;
+            color: #e94560;
+        }
+
+        .map-navigation {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .map-navigation a {
+            padding: 8px 15px;
+            background-color: #f5f5f5;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .map-navigation a:hover {
+            background-color: #e0e0e0;
+        }
+
+        .map-navigation a.active {
+            background-color: #0f3460;
+            color: white;
+        }
+
+        .leaflet-popup-content {
+            margin: 10px;
+        }
+
+        .leaflet-popup-content h3 {
+            margin: 0 0 5px 0;
+            color: #0f3460;
+            font-size: 1rem;
+        }
+
+        .leaflet-popup-content p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .leaflet-popup-content img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .map-wrapper {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <header>
+            <div class="header-container">
+                <div class="logo">
+                    <img src="https://cdn-icons-png.freepik.com/512/7848/7848088.png" alt="Japonsko logo - torii brána">
+                    <h1>Japonsko 2025</h1>
+                </div>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="main-nav" id="main-nav">
+                    <ul>
+                        <li><a href="index.html">Úvod</a></li>
+                        <li><a href="itinerary.html">Itinerář</a></li>
+                        <li><a href="budget.html">Rozpočet</a></li>
+                        <li><a href="practical-info.html">Tipy</a></li>
+                        <li><a href="language.html">Jazyk</a></li>
+                        <li><a href="maps-japan-leaflet.html" class="active">Mapy</a></li>
+                        <li><a href="weather.html">Počasí</a></li>
+                        <li><a href="food.html">Jídlo</a></li>
+                        <li><a href="links.html">Odkazy</a></li>
+                        <li><a href="secure.html">Dokumenty</a></li>
+                    </ul>
+                </nav>
+                <div class="menu-overlay" id="menu-overlay"></div>
+            </div>
+        </header>
+
+        <button class="submenu-toggle" id="submenu-toggle">
+            Mapy <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="subnav-container" id="subnav-container">
+            <nav class="subnav">
+                <ul>
+                    <li><a href="maps-japan-leaflet.html"><i class="fas fa-map"></i> Japonsko</a></li>
+                    <li><a href="maps-osaka-leaflet.html"><i class="fas fa-city"></i> Ósaka</a></li>
+                    <li><a href="maps-kyoto-leaflet.html"><i class="fas fa-torii-gate"></i> Kjóto</a></li>
+                    <li><a href="maps-hiroshima-leaflet.html"><i class="fas fa-dove"></i> Hirošima</a></li>
+                    <li><a href="maps-kanazawa-leaflet.html"><i class="fas fa-leaf"></i> Kanazawa</a></li>
+                    <li><a href="maps-nagano-leaflet.html"><i class="fas fa-mountain"></i> Nagano</a></li>
+                    <li><a href="maps-tokyo-leaflet.html" class="active"><i class="fas fa-building"></i> Tokio</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="subnav-container">
+            <nav class="subnav">
+                <ul>
+                    <li><a href="maps-japan-leaflet.html"><i class="fas fa-map"></i> Japonsko</a></li>
+                    <li><a href="maps-osaka-leaflet.html"><i class="fas fa-city"></i> Ósaka</a></li>
+                    <li><a href="maps-kyoto-leaflet.html"><i class="fas fa-torii-gate"></i> Kjóto</a></li>
+                    <li><a href="maps-hiroshima-leaflet.html"><i class="fas fa-dove"></i> Hirošima</a></li>
+                    <li><a href="maps-kanazawa-leaflet.html"><i class="fas fa-leaf"></i> Kanazawa</a></li>
+                    <li><a href="maps-nagano-leaflet.html"><i class="fas fa-mountain"></i> Nagano</a></li>
+                    <li><a href="maps-tokyo-leaflet.html" class="active"><i class="fas fa-building"></i> Tokio</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <main>
+            <section class="maps-container">
+                <h2>Interaktivní mapy</h2>
+
+                <div class="map-section">
+                    <div class="map-header">
+                        <i class="fas fa-map-marker-alt"></i> Tokio
+                    </div>
+                    <div class="map-content">
+                        <div class="map-wrapper">
+                            <div id="map"></div>
+                        </div>
+                        <div class="poi-list">
+                            <div class="poi-category">
+                                <h3>Body zájmu:</h3>
+                                <div class="poi-item" data-id="shibuya">
+                                    <i class="fas fa-circle"></i> Shibuya Crossing
+                                </div>
+                                <div class="poi-item" data-id="shinjuku">
+                                    <i class="fas fa-circle"></i> Shinjuku Gyoen
+                                </div>
+                                <div class="poi-item" data-id="meiji">
+                                    <i class="fas fa-circle"></i> Svatyně Meiji
+                                </div>
+                                <div class="poi-item" data-id="asakusa">
+                                    <i class="fas fa-circle"></i> Asakusa a Senso-ji
+                                </div>
+                                <div class="poi-item" data-id="skytree">
+                                    <i class="fas fa-circle"></i> Tokyo Skytree
+                                </div>
+                                <div class="poi-item" data-id="akihabara">
+                                    <i class="fas fa-circle"></i> Akihabara
+                                </div>
+                                <div class="poi-item" data-id="imperial">
+                                    <i class="fas fa-circle"></i> Císařský palác
+                                </div>
+                                <div class="poi-item" data-id="odaiba">
+                                    <i class="fas fa-circle"></i> Odaiba
+                                </div>
+                                <div class="poi-item" data-id="tokyo-tower">
+                                    <i class="fas fa-circle"></i> Tokyo Tower
+                                </div>
+                                <div class="poi-item" data-id="tokyo-metropolitan">
+                                    <i class="fas fa-circle"></i> Tokijská metropolitní vládní budova
+                                </div>
+                                <div class="poi-item" data-id="tsukiji">
+                                    <i class="fas fa-circle"></i> Trh Tsukiji
+                                </div>
+                            </div>
+
+                            <div class="poi-category">
+                                <h3>Jednodenní výlety:</h3>
+                                <div class="poi-item" data-id="kamakura">
+                                    <i class="fas fa-circle"></i> Kamakura
+                                </div>
+                                <div class="poi-item" data-id="enoshima">
+                                    <i class="fas fa-circle"></i> Enoshima
+                                </div>
+                                <div class="poi-item" data-id="nikko">
+                                    <i class="fas fa-circle"></i> Nikko
+                                </div>
+                                <div class="poi-item" data-id="chureito">
+                                    <i class="fas fa-circle"></i> Pagoda Chureito
+                                </div>
+                                <div class="poi-item" data-id="kawaguchiko">
+                                    <i class="fas fa-circle"></i> Jezero Kawaguchiko
+                                </div>
+                            </div>
+
+                            <div class="poi-category">
+                                <h3>Ubytování:</h3>
+                                <div class="poi-item" data-id="hotel">
+                                    <i class="fas fa-circle"></i> お宿寧々東京平和島 (Oyado Nene Tokyo Heiwajima)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2025 Japonský cestovní průvodce</p>
+        </footer>
+    </div>
+
+    <script>
+        // Data bodů zájmu
+        const pointsOfInterest = {
+            hotel: {
+                position: [35.5778, 139.7482],
+                title: "お宿寧々東京平和島 (Oyado Nene Tokyo Heiwajima)",
+                description: "Tokyo-to, Tokio, 大森東１丁目８－７ お宿寧々・東京平和島, Japonsko",
+                type: "accommodation",
+                icon: "purple"
+            },
+            "shibuya": {
+                position: [35.6594, 139.7005],
+                title: "Shibuya Crossing",
+                description: "Jedna z nejrušnějších křižovatek na světě",
+                type: "attraction",
+                icon: "red"
+            },
+            "shinjuku": {
+                position: [35.6851, 139.7094],
+                title: "Shinjuku Gyoen",
+                description: "Rozlehlý park s japonskými, anglickými a francouzskými zahradami",
+                type: "attraction",
+                icon: "red"
+            },
+            "meiji": {
+                position: [35.6763, 139.6993],
+                title: "Svatyně Meiji",
+                description: "Šintoistická svatyně zasvěcená císaři Meiji a jeho manželce",
+                type: "attraction",
+                icon: "red"
+            },
+            "asakusa": {
+                position: [35.7147, 139.7966],
+                title: "Asakusa a Senso-ji",
+                description: "Historická čtvrť s nejstarším chrámem v Tokiu",
+                type: "attraction",
+                icon: "red"
+            },
+            "skytree": {
+                position: [35.7101, 139.8107],
+                title: "Tokyo Skytree",
+                description: "Nejvyšší věž v Japonsku s vyhlídkovou plošinou",
+                type: "attraction",
+                icon: "red"
+            },
+            "akihabara": {
+                position: [35.6983, 139.7707],
+                title: "Akihabara",
+                description: "Čtvrť elektroniky, anime a manga kultury",
+                type: "attraction",
+                icon: "red"
+            },
+            "imperial": {
+                position: [35.6852, 139.7528],
+                title: "Císařský palác",
+                description: "Rezidence japonského císaře s nádhernými zahradami",
+                type: "attraction",
+                icon: "red"
+            },
+            "odaiba": {
+                position: [35.6246, 139.7755],
+                title: "Odaiba",
+                description: "Umělý ostrov s nákupními centry, muzei a zábavními parky",
+                type: "attraction",
+                icon: "red"
+            },
+            "tokyo-tower": {
+                position: [35.6586, 139.7454],
+                title: "Tokyo Tower",
+                description: "Ikonická věž inspirovaná Eiffelovou věží",
+                type: "attraction",
+                icon: "red"
+            },
+            "kamakura": {
+                position: [35.3192, 139.5467],
+                title: "Kamakura",
+                description: "Historické město s velkým bronzovým Buddhou",
+                type: "day-trip",
+                icon: "green"
+            },
+            "enoshima": {
+                position: [35.3002, 139.4808],
+                title: "Enoshima",
+                description: "Malý ostrov spojený mostem s pevninou",
+                type: "day-trip",
+                icon: "green"
+            },
+            "nikko": {
+                position: [36.7485, 139.6203],
+                title: "Nikko",
+                description: "Horské město s chrámy a svatyněmi UNESCO",
+                type: "day-trip",
+                icon: "green"
+            },
+            "tokyo-metropolitan": {
+                position: [35.6897, 139.6922],
+                title: "Tokijská metropolitní vládní budova",
+                description: "Vládní budova s vyhlídkovou plošinou nabízející panoramatický výhled na Tokio",
+                type: "attraction",
+                icon: "red"
+            },
+            "tsukiji": {
+                position: [35.6654, 139.7707],
+                title: "Trh Tsukiji",
+                description: "Tradiční trh s mořskými plody a potravinami",
+                type: "attraction",
+                icon: "red"
+            },
+            "chureito": {
+                position: [35.5013, 138.8014],
+                title: "Pagoda Chureito",
+                description: "Ikonická pětipodlažní pagoda s výhledem na horu Fuji",
+                type: "day-trip",
+                icon: "green"
+            },
+            "kawaguchiko": {
+                position: [35.5150, 138.7567],
+                title: "Jezero Kawaguchiko",
+                description: "Jedno z pěti jezer Fuji s krásným výhledem na horu Fuji",
+                type: "day-trip",
+                icon: "green"
+            }
+        };
+
+        // Inicializace mapy
+        function initMap() {
+            // Centrum mapy - Tokio
+            const center = [35.6762, 139.6503];
+
+            // Vytvoření mapy
+            const map = L.map('map').setView(center, 11);
+
+            // Přidání Esri World Street Map podkladu s anglickými popisky
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+                maxZoom: 19
+            }).addTo(map);
+
+            // Přidání ovládacích prvků pro přiblížení/oddálení
+            L.control.zoom({
+                position: 'topright'
+            }).addTo(map);
+
+            // Vlastní ikony pro markery
+            const icons = {
+                red: L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                }),
+                green: L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                }),
+                purple: L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                })
+            };
+
+            // Markery pro body zájmu
+            const markers = {};
+
+            // Přidání markerů na mapu
+            for (const [id, poi] of Object.entries(pointsOfInterest)) {
+                const marker = L.marker(poi.position, {
+                    title: poi.title,
+                    icon: icons[poi.icon]
+                }).addTo(map);
+
+                // Obsah popup okna
+                const content = `
+                    <div>
+                        <h3>${poi.title}</h3>
+                        <p>${poi.description}</p>
+                    </div>
+                `;
+
+                marker.bindPopup(content);
+                markers[id] = marker;
+            }
+
+            // Přidání události kliknutí na položky v seznamu
+            document.querySelectorAll('.poi-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const id = item.getAttribute('data-id');
+                    const marker = markers[id];
+                    const poi = pointsOfInterest[id];
+
+                    // Otevření popup okna
+                    marker.openPopup();
+
+                    // Centrování mapy na marker
+                    map.setView(poi.position, 15);
+
+                    // Zvýraznění položky v seznamu
+                    document.querySelectorAll('.poi-item').forEach(i => {
+                        i.classList.remove('active');
+                    });
+                    item.classList.add('active');
+                });
+            });
+        }
+
+        // Načtení mapy po načtení stránky
+        document.addEventListener('DOMContentLoaded', initMap);
+    </script>
+</body>
+</html>
+
+

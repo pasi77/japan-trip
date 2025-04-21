@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="640" height="360" viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg">
+  <!-- Pozadí - obloha -->
+  <rect width="640" height="360" fill="#87CEEB"/>
+  
+  <!-- Jezero -->
+  <rect y="240" width="640" height="120" fill="#1E90FF"/>
+  
+  <!-- Hora Fuji -->
+  <polygon points="120,240 520,240 320,40" fill="#F5F5F5"/>
+  
+  <!-- Sníh na vrcholu -->
+  <polygon points="280,120 360,120 320,40" fill="#FFFFFF"/>
+  
+  <!-- Stíny na hoře -->
+  <polygon points="120,240 320,40 320,240" fill="#E0E0E0"/>
+  
+  <!-- Mraky -->
+  <ellipse cx="150" cy="100" rx="50" ry="20" fill="#FFFFFF" fill-opacity="0.8"/>
+  <ellipse cx="500" cy="80" rx="60" ry="25" fill="#FFFFFF" fill-opacity="0.8"/>
+  <ellipse cx="350" cy="120" rx="40" ry="15" fill="#FFFFFF" fill-opacity="0.8"/>
+  
+  <!-- Odraz v jezeře -->
+  <polygon points="120,240 520,240 320,340" fill="#1E90FF" opacity="0.5"/>
+  
+  <!-- Popisek -->
+  <text x="320" y="280" font-family="Arial" font-size="20" text-anchor="middle" fill="#FFFFFF">Hora Fuji</text>
+</svg>

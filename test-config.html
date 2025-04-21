@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test konfigurace</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .success {
+            color: green;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test konfigurace</h1>
+    
+    <div id="result"></div>
+    
+    <script src="config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                // Kontrola, zda je CONFIG definován
+                if (typeof CONFIG === 'undefined') {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>Chyba: CONFIG není definován</h3>
+                            <p>Soubor config.js nebyl správně načten nebo neobsahuje proměnnou CONFIG.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Kontrola struktury CONFIG
+                let missingKeys = [];
+                if (!CONFIG.API_KEY) missingKeys.push('API_KEY');
+                if (!CONFIG.CLIENT_ID) missingKeys.push('CLIENT_ID');
+                if (!CONFIG.ALLOWED_EMAILS) missingKeys.push('ALLOWED_EMAILS');
+                if (!CONFIG.FOLDERS) missingKeys.push('FOLDERS');
+                
+                if (missingKeys.length > 0) {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>Chyba: Nekompletní konfigurace</h3>
+                            <p>V konfiguraci chybí následující klíče: ${missingKeys.join(', ')}</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Kontrola struktury FOLDERS
+                if (CONFIG.FOLDERS) {
+                    let missingFolders = [];
+                    if (!CONFIG.FOLDERS.flights) missingFolders.push('flights');
+                    if (!CONFIG.FOLDERS.accommodation) missingFolders.push('accommodation');
+                    if (!CONFIG.FOLDERS.tickets) missingFolders.push('tickets');
+                    if (!CONFIG.FOLDERS.other) missingFolders.push('other');
+                    
+                    if (missingFolders.length > 0) {
+                        resultDiv.innerHTML += `
+                            <div class="error">
+                                <h3>Varování: Nekompletní složky</h3>
+                                <p>V konfiguraci složek chybí následující klíče: ${missingFolders.join(', ')}</p>
+                            </div>
+                        `;
+                    }
+                }
+                
+                // Zobrazení úspěšného výsledku
+                resultDiv.innerHTML += `
+                    <div class="success">
+                        <h3>Úspěch: Konfigurace je správně načtena</h3>
+                        <p>Soubor config.js byl správně načten a obsahuje všechny potřebné klíče.</p>
+                    </div>
+                    
+                    <h3>Struktura konfigurace:</h3>
+                    <pre>CONFIG = {
+  API_KEY: "${CONFIG.API_KEY ? '***' : 'undefined'}",
+  CLIENT_ID: "${CONFIG.CLIENT_ID ? '***' : 'undefined'}",
+  ALLOWED_EMAILS: ${CONFIG.ALLOWED_EMAILS ? JSON.stringify(CONFIG.ALLOWED_EMAILS).replace(/@/g, '***@***') : 'undefined'},
+  FOLDERS: ${CONFIG.FOLDERS ? JSON.stringify(CONFIG.FOLDERS, null, 2) : 'undefined'}
+}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>Chyba při testování konfigurace</h3>
+                        <p>Došlo k chybě při testování konfigurace: ${error.message}</p>
+                        <pre>${error.stack}</pre>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Počasí v Japonsku - Japonský cestovní průvodce</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.12/css/weather-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.12/css/weather-icons-wind.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="script.js"></script>
+    <script src="menu.js"></script>
+    <script src="weather-config.js"></script>
+    <script src="weather-icons.js"></script>
+    <script src="weather.js"></script>
+    <style>
+        .weather-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .weather-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .weather-tab {
+            padding: 10px 15px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .weather-tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .weather-content {
+            display: none;
+        }
+
+        .weather-content.active {
+            display: block;
+        }
+
+        .weather-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .weather-card-header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .weather-card-header span {
+            color: white;
+        }
+
+        .weather-card-header h3 {
+            margin: 0;
+            font-size: 1.4rem;
+            color: white;
+        }
+
+        .weather-card-body {
+            padding: 20px;
+        }
+
+        .current-weather {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .current-weather-icon {
+            margin-right: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .current-weather-icon i {
+            font-size: 100px;
+            color: #0078d4;
+        }
+
+        .current-weather-info {
+            flex: 1;
+        }
+
+        .current-weather-temp {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .current-weather-desc {
+            font-size: 1.2rem;
+            margin: 5px 0;
+        }
+
+        .current-weather-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .weather-detail {
+            display: flex;
+            align-items: center;
+        }
+
+        .weather-detail i {
+            margin-right: 8px;
+            color: var(--primary-color);
+            font-size: 18px;
+        }
+
+        .forecast {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .forecast-day {
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .forecast-day:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .forecast-date {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .forecast-icon {
+            margin: 0 auto 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .forecast-icon i {
+            font-size: 40px;
+            color: #0078d4;
+        }
+
+        .forecast-temp {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .forecast-desc {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .loading-spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .api-key-form {
+            background-color: #e3f2fd;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .api-key-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .api-key-form button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .api-key-form button:hover {
+            background-color: #c73e54;
+        }
+
+        .weather-note {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Styly pro sekci viditelnosti hory Fuji */
+        .fuji-visibility-section {
+            margin-top: 40px;
+            border-top: 1px solid #eee;
+            padding-top: 30px;
+        }
+
+        .fuji-visibility-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .fuji-visibility-header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .fuji-visibility-header h4 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .fuji-visibility-body {
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .fuji-visibility-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .fuji-visibility-directions {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .fuji-direction {
+            flex: 1;
+        }
+
+        .fuji-direction h5 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .fuji-index-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .fuji-index {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 10px;
+            background-color: #f0f0f0;
+        }
+
+        .fuji-time {
+            font-size: 0.9rem;
+        }
+
+        .fuji-scale {
+            margin-top: 20px;
+        }
+
+        .fuji-scale-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .fuji-scale-levels {
+            display: flex;
+            gap: 5px;
+        }
+
+        .fuji-scale-level {
+            flex: 1;
+            text-align: center;
+            padding: 5px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: #333;
+        }
+
+        .fuji-image {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .fuji-image img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 4px;
+        }
+
+        .fuji-visibility-footer {
+            background-color: #f9f9f9;
+            padding: 15px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .fuji-visibility-footer p {
+            margin: 5px 0;
+        }
+
+        .fuji-viewing-tips {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: var(--border-radius);
+        }
+
+        .fuji-viewing-tips h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .fuji-viewing-tips ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .fuji-viewing-tips li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <header>
+            <div class="header-container">
+                <div class="logo">
+                    <img src="https://cdn-icons-png.freepik.com/512/7848/7848088.png" alt="Japonsko logo - torii brána">
+                    <h1>Japonsko 2025</h1>
+                </div>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="main-nav" id="main-nav">
+                    <ul>
+                        <li><a href="index.html">Úvod</a></li>
+                        <li><a href="itinerary.html">Itinerář</a></li>
+                        <li><a href="budget.html">Rozpočet</a></li>
+                        <li><a href="practical-info.html">Tipy</a></li>
+                        <li><a href="language.html">Jazyk</a></li>
+                        <li><a href="maps-japan-leaflet.html">Mapy</a></li>
+                        <li><a href="weather.html" class="active">Počasí</a></li>
+                        <li><a href="food.html">Jídlo</a></li>
+                        <li><a href="links.html">Odkazy</a></li>
+                        <li><a href="secure.html">Dokumenty</a></li>
+                    </ul>
+                </nav>
+                <div class="menu-overlay" id="menu-overlay"></div>
+            </div>
+        </header>
+
+        <button class="submenu-toggle" id="submenu-toggle">
+            Počasí <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="subnav-container" id="subnav-container">
+            <nav class="subnav">
+                <ul>
+                    <li><a href="#weather-section" class="active"><i class="fas fa-cloud-sun"></i> Předpověď počasí</a></li>
+                    <li><a href="#fuji-visibility"><i class="fas fa-mountain"></i> Viditelnost hory Fuji</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <main>
+            <section class="weather-section" id="weather-section">
+                <h2>Předpověď počasí v Japonsku</h2>
+
+                <!-- API klíč je načítán z weather-config.js -->
+
+                <div class="error-message" id="error-message">
+                    <p>Nepodařilo se načíst data o počasí. Zkontrolujte, zda je API klíč správný a zkuste to znovu.</p>
+                </div>
+
+                <div class="weather-tabs" id="weather-tabs">
+                    <button class="weather-tab active" data-city="Osaka" data-lat="34.6937" data-lon="135.5023">Osaka</button>
+                    <button class="weather-tab" data-city="Kyoto" data-lat="35.0116" data-lon="135.7681">Kyoto</button>
+                    <button class="weather-tab" data-city="Hiroshima" data-lat="34.3853" data-lon="132.4553">Hiroshima</button>
+                    <button class="weather-tab" data-city="Kobe" data-lat="34.6901" data-lon="135.1955">Kobe</button>
+                    <button class="weather-tab" data-city="Kanazawa" data-lat="36.5944" data-lon="136.6255">Kanazawa</button>
+                    <button class="weather-tab" data-city="Nagano" data-lat="36.6486" data-lon="138.1951">Nagano</button>
+                    <button class="weather-tab" data-city="Tokyo" data-lat="35.6762" data-lon="139.6503">Tokyo</button>
+                    <button class="weather-tab" data-city="Nikko" data-lat="36.7198" data-lon="139.6982">Nikko</button>
+                    <button class="weather-tab" data-city="Kawaguchi" data-lat="35.5167" data-lon="138.7500">Lake Kawaguchi</button>
+                </div>
+
+                <div id="weather-content-container">
+                    <!-- Weather content will be dynamically inserted here -->
+                </div>
+
+                <div class="fuji-visibility-section" id="fuji-visibility">
+                    <h3>Viditelnost hory Fuji</h3>
+                    <p>Hora Fuji je jedním z nejvýznamnějších symbolů Japonska a její pohled je nezapomenutelným zážitkem. Viditelnost hory Fuji však závisí na počasí a dalších faktorech.</p>
+
+                    <div class="fuji-visibility-card">
+                        <div class="fuji-visibility-header">
+                            <h4>Aktuální index viditelnosti hory Fuji</h4>
+                            <span id="fuji-update-time">Aktualizováno: --</span>
+                        </div>
+                        <div class="fuji-visibility-body">
+                            <div class="fuji-visibility-info">
+                                <div class="fuji-visibility-directions">
+                                    <div class="fuji-direction">
+                                        <h5>Ze severu</h5>
+                                        <div class="fuji-index-container">
+                                            <div class="fuji-index" id="fuji-north-am">--</div>
+                                            <div class="fuji-time">dopoledne</div>
+                                        </div>
+                                        <div class="fuji-index-container">
+                                            <div class="fuji-index" id="fuji-north-pm">--</div>
+                                            <div class="fuji-time">odpoledne</div>
+                                        </div>
+                                    </div>
+                                    <div class="fuji-direction">
+                                        <h5>Z jihu</h5>
+                                        <div class="fuji-index-container">
+                                            <div class="fuji-index" id="fuji-south-am">--</div>
+                                            <div class="fuji-time">dopoledne</div>
+                                        </div>
+                                        <div class="fuji-index-container">
+                                            <div class="fuji-index" id="fuji-south-pm">--</div>
+                                            <div class="fuji-time">odpoledne</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="fuji-scale">
+                                    <div class="fuji-scale-title">Index viditelnosti (1-10):</div>
+                                    <div class="fuji-scale-levels">
+                                        <div class="fuji-scale-level" style="background-color: #ff0000; color: white;">1-2: Velmi špatná</div>
+                                        <div class="fuji-scale-level" style="background-color: #ff9900; color: white;">3-4: Špatná</div>
+                                        <div class="fuji-scale-level" style="background-color: #ffff00;">5-6: Průměrná</div>
+                                        <div class="fuji-scale-level" style="background-color: #99cc00;">7-8: Dobrá</div>
+                                        <div class="fuji-scale-level" style="background-color: #009900;">9-10: Výborná</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="fuji-image">
+                                <img src="images/mount-fuji-wide.jpg" alt="Hora Fuji - široký panoramatický pohled" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                            </div>
+                        </div>
+                        <div class="fuji-visibility-footer">
+                            <p>Poznámka: Tato data jsou simulována pro demonstrační účely. V reálném nasazení by byla získávána z aktuálních zdrojů.</p>
+                            <p>Obrázek: Fotografie hory Fuji z Unsplash (volně dostupná k použití)</p>
+                        </div>
+                    </div>
+
+                    <div class="fuji-viewing-tips">
+                        <h4>Tipy pro pozorování hory Fuji</h4>
+                        <ul>
+                            <li><strong>Nejlepší období:</strong> Zimní měsíce (listopad až únor) obvykle nabízejí nejlepší viditelnost díky čistšímu vzduchu.</li>
+                            <li><strong>Nejlepší čas:</strong> Brzy ráno, zejména za úsvitu, kdy je vzduch nejčistší a je menší pravděpodobnost výskytu mraků.</li>
+                            <li><strong>Nejlepší místa:</strong> Jezero Kawaguchi, Hakone, Observatoř Bunjitsu (Tokio), Hora Tenjo (přístupná lanovkou z Kawaguchiko).</li>
+                            <li><strong>Sledujte předpověď:</strong> Před návštěvou zkontrolujte předpověď počasí a index viditelnosti.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2025 Japonský cestovní průvodce</p>
+        </footer>
+    </div>
+</body>
+</html>

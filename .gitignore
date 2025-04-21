@@ -1,0 +1,16 @@
+# Ignorovat konfigurační soubor s citlivými údaji
+config.js
+
+# Ignorovat soubory operačního systému
+.DS_Store
+Thumbs.db
+
+# Ignorovat soubory editoru
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignorovat dočasné soubory
+*.tmp
+*.log

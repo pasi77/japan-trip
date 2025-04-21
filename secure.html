@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cestovní dokumenty - Japonský cestovní průvodce</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="script.js"></script>
+    <script src="menu.js"></script>
+    <style>
+        .secure-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .login-section {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: #f9f9f9;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+        }
+
+        .login-section p {
+            margin-bottom: 25px;
+            color: #555;
+        }
+
+        .login-button {
+            display: inline-block;
+            background-color: #4285F4;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .login-button:hover {
+            background-color: #3367D6;
+        }
+
+        .login-button i {
+            margin-right: 10px;
+        }
+
+        .documents-section {
+            display: none;
+        }
+
+        .document-category {
+            margin-bottom: 30px;
+        }
+
+        .document-category h3 {
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .document-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .document-card {
+            background-color: #f9f9f9;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .document-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .document-icon {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--secondary-color);
+            color: white;
+            font-size: 3rem;
+        }
+
+        .document-info {
+            padding: 15px;
+        }
+
+        .document-info h4 {
+            margin: 0 0 10px 0;
+            color: var(--dark-color);
+        }
+
+        .document-info p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .document-link {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .document-link:hover {
+            background-color: #d03e54;
+            color: white;
+        }
+
+        .logout-button {
+            display: inline-block;
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .logout-button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+
+        .security-note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 30px;
+            border-radius: 4px;
+        }
+
+        .security-note h4 {
+            color: #ff8f00;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .security-note p {
+            color: #5d4037;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <header>
+            <div class="header-container">
+                <div class="logo">
+                    <img src="https://cdn-icons-png.freepik.com/512/7848/7848088.png" alt="Japonsko logo - torii brána">
+                    <h1>Japonsko 2025</h1>
+                </div>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="main-nav" id="main-nav">
+                    <ul>
+                        <li><a href="index.html">Úvod</a></li>
+                        <li><a href="itinerary.html">Itinerář</a></li>
+                        <li><a href="budget.html">Rozpočet</a></li>
+                        <li><a href="practical-info.html">Praktické informace</a></li>
+                        <li><a href="language.html">Jazyk</a></li>
+                        <li><a href="maps-japan-leaflet.html">Mapy</a></li>
+                        <li><a href="weather.html">Počasí</a></li>
+                        <li><a href="food.html">Jídlo</a></li>
+                        <li><a href="links.html">Odkazy</a></li>
+                        <li><a href="secure.html" class="active">Dokumenty</a></li>
+                    </ul>
+                </nav>
+                <div class="menu-overlay" id="menu-overlay"></div>
+            </div>
+        </header>
+
+        <main>
+            <section class="secure-container">
+                <h2>Cestovní dokumenty</h2>
+
+                <!-- Přihlašovací sekce -->
+                <div id="login-section" class="login-section">
+                    <h3>Zabezpečená sekce</h3>
+                    <p>Pro přístup k cestovním dokumentům se prosím přihlaste svým Google účtem.</p>
+                    <div id="googleSignInButton" class="login-button">
+                        <i class="fab fa-google"></i> Přihlásit se přes Google
+                    </div>
+                </div>
+
+                <!-- Sekce s dokumenty (zobrazí se po přihlášení) -->
+                <div id="documents-section" class="documents-section">
+                    <div class="user-info">
+                        <img id="user-avatar" src="" alt="Profilový obrázek" class="user-avatar">
+                        <span id="user-name" class="user-name"></span>
+                    </div>
+
+                    <div class="document-category">
+                        <h3><i class="fas fa-plane"></i> Letenky a doprava</h3>
+                        <div id="flights-list" class="document-list">
+                            <p>Načítání dokumentů...</p>
+                        </div>
+                    </div>
+
+                    <div class="document-category">
+                        <h3><i class="fas fa-hotel"></i> Ubytování</h3>
+                        <div id="accommodation-list" class="document-list">
+                            <p>Načítání dokumentů...</p>
+                        </div>
+                    </div>
+
+                    <div class="document-category">
+                        <h3><i class="fas fa-ticket-alt"></i> Vstupenky a rezervace</h3>
+                        <div id="tickets-list" class="document-list">
+                            <p>Načítání dokumentů...</p>
+                        </div>
+                    </div>
+
+                    <div class="document-category">
+                        <h3><i class="fas fa-file-alt"></i> Ostatní dokumenty</h3>
+                        <div id="other-list" class="document-list">
+                            <p>Načítání dokumentů...</p>
+                        </div>
+                    </div>
+
+                    <div class="security-note">
+                        <h4><i class="fas fa-shield-alt"></i> Bezpečnostní upozornění</h4>
+                        <p>Kopie osobních dokladů (pas, občanský průkaz) nejsou z bezpečnostních důvodů uloženy online. Doporučujeme mít tyto dokumenty v zašifrované podobě offline nebo v zabezpečené aplikaci ve vašem telefonu.</p>
+                    </div>
+
+                    <button id="logout-button" class="logout-button">
+                        <i class="fas fa-sign-out-alt"></i> Odhlásit se
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Japonský cestovní průvodce</p>
+        </footer>
+    </div>
+
+    <!-- Načtení skriptu pro práci s dokumenty -->
+    <script src="secure-docs.js"></script>
+</body>
+</html>

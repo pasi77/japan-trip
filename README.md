@@ -34,15 +34,12 @@ Pro správnou funkci sekce "Dokumenty" je potřeba vytvořit soubor `config.js` 
 
 1. Vytvořte projekt v [Google Cloud Console](https://console.cloud.google.com/)
 2. Povolte Google Drive API pro váš projekt
-3. Vytvořte OAuth 2.0 Client ID a API klíč
+3. Vytvořte OAuth 2.0 Client ID
 4. Vytvořte soubor `config.js` podle šablony `config.template.js` a doplňte vaše hodnoty:
 
 ```javascript
 // config.js - OBSAHUJE SKUTEČNÉ HODNOTY, NENÍ V GITU
 const CONFIG = {
-  // API klíč z Google Cloud Console
-  API_KEY: 'vaše_skutečné_api_key',
-
   // Client ID z Google Cloud Console
   CLIENT_ID: 'vaše_skutečné_client_id',
 

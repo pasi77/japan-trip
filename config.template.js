@@ -1,15 +1,12 @@
 // config.template.js - TEMPLATE, NEOBSAHUJE SKUTEČNÉ HODNOTY
 // Vytvořte kopii tohoto souboru jako config.js a doplňte skutečné hodnoty
 const CONFIG = {
-  // API klíč z Google Cloud Console
-  API_KEY: 'YOUR_API_KEY_HERE',
-  
   // Client ID z Google Cloud Console
   CLIENT_ID: 'YOUR_CLIENT_ID_HERE',
-  
+
   // Seznam povolených emailů pro přístup k dokumentům
   ALLOWED_EMAILS: ['your@email.com'],
-  
+
   // ID složek v Google Drive
   FOLDERS: {
     flights: 'YOUR_FLIGHTS_FOLDER_ID_HERE',

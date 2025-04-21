@@ -3,7 +3,7 @@ const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/r
 const SCOPES = 'https://www.googleapis.com/auth/drive.readonly';
 
 // Proměnné pro konfiguraci, které budou načteny z config.js
-let API_KEY;
+// API_KEY není potřeba při použití OAuth 2.0 flow
 let CLIENT_ID;
 let FOLDERS;
 let ALLOWED_EMAILS;
@@ -18,7 +18,7 @@ let userProfile = null;
  */
 function initializeGapiClient() {
     gapi.client.init({
-        apiKey: API_KEY,
+        // apiKey není potřeba při použití OAuth 2.0 flow
         discoveryDocs: DISCOVERY_DOCS,
     }).then(() => {
         gapiInited = true;
@@ -216,13 +216,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Načtení hodnot z konfigurace
-    API_KEY = CONFIG.API_KEY;
+    // API_KEY není potřeba při použití OAuth 2.0 flow
     CLIENT_ID = CONFIG.CLIENT_ID;
     FOLDERS = CONFIG.FOLDERS;
     ALLOWED_EMAILS = CONFIG.ALLOWED_EMAILS;
 
     // Kontrola, zda jsou všechny potřebné hodnoty definovány
-    if (!API_KEY || !CLIENT_ID || !FOLDERS || !ALLOWED_EMAILS) {
+    if (!CLIENT_ID || !FOLDERS || !ALLOWED_EMAILS) {
         showError('Konfigurační soubor je nekompletní. Kontaktujte správce webu.');
         return;
     }

@@ -19,7 +19,11 @@ jobs:
       - name: Create config.js 🔧
         run: |
           echo "${{ secrets.CONFIG_JS }}" > config.js
-        
+          echo "Kontrola vytvořeného souboru config.js:"
+          ls -la config.js
+          echo "Prvních 10 řádků souboru (bez citlivých údajů):"
+          head -n 10 config.js | grep -v "API_KEY\|CLIENT_ID\|ALLOWED_EMAILS\|FOLDERS"
+
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:

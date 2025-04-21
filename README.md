@@ -1,5 +1,7 @@
 # Japonsko 2025 - Cestovní průvodce
 
+*Aktualizováno: Duben 2025*
+
 Toto je webová aplikace pro cestovní průvodce po Japonsku pro říjen 2025.
 
 ## Obsah

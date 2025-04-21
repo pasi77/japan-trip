@@ -30,13 +30,28 @@ function initializeGapiClient() {
  * Inicializace Google Identity Services
  */
 function gisInit() {
-    tokenClient = google.accounts.oauth2.initTokenClient({
-        client_id: CLIENT_ID,
-        scope: SCOPES,
-        callback: '', // Bude nastaveno později
-    });
-    gisInited = true;
-    maybeEnableButtons();
+    try {
+        tokenClient = google.accounts.oauth2.initTokenClient({
+            client_id: CLIENT_ID,
+            scope: SCOPES,
+            callback: '', // Bude nastaveno později
+            error_callback: (error) => {
+                console.error('Chyba při inicializaci OAuth:', error);
+                showError(`Chyba při inicializaci OAuth: ${error.type}. <br><br>
+                         Možné příčiny:<br>
+                         - Neplatné Client ID<br>
+                         - Chybějící povolené redirects v Google Cloud Console<br>
+                         - Chybějící povolené domény v OAuth consent screen<br><br>
+                         Zkontrolujte nastavení v Google Cloud Console.`);
+            }
+        });
+        gisInited = true;
+        maybeEnableButtons();
+    } catch (error) {
+        console.error('Chyba při inicializaci Google Identity Services:', error);
+        showError(`Chyba při inicializaci Google Identity Services: ${error.message}. <br><br>
+                 Zkontrolujte nastavení v Google Cloud Console a ujistěte se, že Client ID je správné.`);
+    }
 }
 
 /**
@@ -101,10 +116,21 @@ function handleAuthClick() {
         }
     };
 
-    if (gapi.client.getToken() === null) {
-        tokenClient.requestAccessToken({prompt: 'consent'});
-    } else {
-        tokenClient.requestAccessToken({prompt: ''});
+    try {
+        if (gapi.client.getToken() === null) {
+            // Při prvním přihlášení vždy zobrazit dialog pro souhlas
+            tokenClient.requestAccessToken({
+                prompt: 'consent',
+                hint: ALLOWED_EMAILS[0] // Nápověda pro výběr správného účtu
+            });
+        } else {
+            // Při dalších přihlášeních nezobrazovat dialog
+            tokenClient.requestAccessToken({prompt: ''});
+        }
+    } catch (error) {
+        console.error('Chyba při žádosti o přístupový token:', error);
+        showError(`Chyba při žádosti o přístupový token: ${error.message}. <br><br>
+                 Zkuste obnovit stránku nebo použít jiný prohlížeč.`);
     }
 }
 

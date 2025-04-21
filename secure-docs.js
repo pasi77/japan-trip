@@ -13,6 +13,48 @@ let gapiInited = false;
 let gisInited = false;
 let userProfile = null;
 
+// Konstanty pro localStorage
+const TOKEN_STORAGE_KEY = 'japan_trip_auth_token';
+const USER_PROFILE_STORAGE_KEY = 'japan_trip_user_profile';
+
+/**
+ * Uložení tokenu do localStorage
+ */
+function saveTokenToStorage(token) {
+    if (token) {
+        localStorage.setItem(TOKEN_STORAGE_KEY, JSON.stringify(token));
+    } else {
+        localStorage.removeItem(TOKEN_STORAGE_KEY);
+    }
+}
+
+/**
+ * Načtení tokenu z localStorage
+ */
+function loadTokenFromStorage() {
+    const tokenStr = localStorage.getItem(TOKEN_STORAGE_KEY);
+    return tokenStr ? JSON.parse(tokenStr) : null;
+}
+
+/**
+ * Uložení profilu uživatele do localStorage
+ */
+function saveUserProfileToStorage(profile) {
+    if (profile) {
+        localStorage.setItem(USER_PROFILE_STORAGE_KEY, JSON.stringify(profile));
+    } else {
+        localStorage.removeItem(USER_PROFILE_STORAGE_KEY);
+    }
+}
+
+/**
+ * Načtení profilu uživatele z localStorage
+ */
+function loadUserProfileFromStorage() {
+    const profileStr = localStorage.getItem(USER_PROFILE_STORAGE_KEY);
+    return profileStr ? JSON.parse(profileStr) : null;
+}
+
 /**
  * Inicializace Google API
  */
@@ -23,6 +65,14 @@ function initializeGapiClient() {
     }).then(() => {
         gapiInited = true;
         maybeEnableButtons();
+
+        // Pokus o automatické přihlášení pomocí uloženého tokenu
+        const savedToken = loadTokenFromStorage();
+        if (savedToken) {
+            gapi.client.setToken(savedToken);
+            // Ověření platnosti tokenu a načtení profilu
+            checkTokenAndLoadProfile();
+        }
     });
 }
 
@@ -51,6 +101,56 @@ function gisInit() {
         console.error('Chyba při inicializaci Google Identity Services:', error);
         showError(`Chyba při inicializaci Google Identity Services: ${error.message}. <br><br>
                  Zkontrolujte nastavení v Google Cloud Console a ujistěte se, že Client ID je správné.`);
+    }
+}
+
+/**
+ * Ověření platnosti tokenu a načtení profilu
+ */
+async function checkTokenAndLoadProfile() {
+    try {
+        // Pokus o získání informací o uživateli pro ověření platnosti tokenu
+        const response = await gapi.client.drive.about.get({
+            fields: 'user'
+        });
+
+        const email = response.result.user.emailAddress;
+
+        // Kontrola, zda je email v seznamu povolených
+        if (ALLOWED_EMAILS.includes(email)) {
+            userProfile = {
+                name: response.result.user.displayName,
+                email: email,
+                imageUrl: response.result.user.photoLink
+            };
+
+            // Uložení profilu do localStorage
+            saveUserProfileToStorage(userProfile);
+
+            // Zobrazení sekce s dokumenty
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('documents-section').style.display = 'block';
+
+            // Nastavení informací o uživateli
+            document.getElementById('user-name').textContent = userProfile.name;
+            if (userProfile.imageUrl) {
+                document.getElementById('user-avatar').src = userProfile.imageUrl;
+            }
+
+            // Načtení dokumentů
+            loadAllDocuments();
+            return true;
+        } else {
+            console.log('Email není v seznamu povolených, odhlášení...');
+            handleSignoutClick();
+            return false;
+        }
+    } catch (err) {
+        console.error('Chyba při ověřování tokenu:', err);
+        // Token je neplatný nebo vypršel, odstraníme ho z localStorage
+        saveTokenToStorage(null);
+        saveUserProfileToStorage(null);
+        return false;
     }
 }
 
@@ -94,6 +194,10 @@ function handleAuthClick() {
                     email: email,
                     imageUrl: response.result.user.photoLink
                 };
+
+                // Uložení tokenu a profilu do localStorage
+                saveTokenToStorage(gapi.client.getToken());
+                saveUserProfileToStorage(userProfile);
 
                 // Zobrazení sekce s dokumenty
                 document.getElementById('login-section').style.display = 'none';
@@ -142,6 +246,10 @@ function handleSignoutClick() {
     if (token !== null) {
         google.accounts.oauth2.revoke(token.access_token);
         gapi.client.setToken('');
+
+        // Odstranění tokenu a profilu z localStorage
+        saveTokenToStorage(null);
+        saveUserProfileToStorage(null);
 
         document.getElementById('login-section').style.display = 'block';
         document.getElementById('documents-section').style.display = 'none';

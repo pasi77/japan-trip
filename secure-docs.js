@@ -55,6 +55,12 @@ function handleAuthClick() {
     tokenClient.callback = async (resp) => {
         if (resp.error !== undefined) {
             console.error('Chyba při přihlašování:', resp);
+            showError(`Chyba při přihlašování: ${resp.error}. <br><br>
+                     Možné příčiny:<br>
+                     - Váš účet nemá oprávnění pro přístup k této aplikaci<br>
+                     - Aplikace není správně nakonfigurována v Google Cloud Console<br>
+                     - Používáte firemní nebo školní účet s omezeními<br><br>
+                     Zkuste použít jiný Google účet nebo kontaktujte správce webu.`);
             return;
         }
 

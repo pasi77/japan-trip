@@ -16,22 +16,14 @@ jobs:
         with:
           persist-credentials: true # Zajistí, že credentials budou dostupné pro další kroky
 
-      - name: Check config.js 🔧
+      - name: Create config.js 🔧
         run: |
-          if [ -f "config.js" ]; then
-            echo "Použiju existující soubor config.js z repozitáře"
-            echo "Kontrola souboru config.js:"
-            ls -la config.js
-            echo "Prvních 10 řádků souboru (bez citlivých údajů):"
-            head -n 10 config.js | grep -v "API_KEY\|CLIENT_ID\|ALLOWED_EMAILS\|FOLDERS"
-          else
-            echo "Soubor config.js neexistuje v repozitáři, vytvořím ho z tajemství"
-            echo "${{ secrets.CONFIG_JS }}" > config.js
-            echo "Kontrola vytvořeného souboru config.js:"
-            ls -la config.js
-            echo "Prvních 10 řádků souboru (bez citlivých údajů):"
-            head -n 10 config.js | grep -v "API_KEY\|CLIENT_ID\|ALLOWED_EMAILS\|FOLDERS"
-          fi
+          echo "Vytvářím soubor config.js z tajemství"
+          echo "${{ secrets.CONFIG_JS }}" > config.js
+          echo "Kontrola vytvořeného souboru config.js:"
+          ls -la config.js
+          echo "Prvních 10 řádků souboru (bez citlivých údajů):"
+          head -n 10 config.js | grep -v "API_KEY\|CLIENT_ID\|ALLOWED_EMAILS\|FOLDERS"
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4

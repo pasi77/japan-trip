@@ -1,0 +1,24 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Create config.js 🔧
+        run: |
+          echo "${{ secrets.CONFIG_JS }}" > config.js
+        
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: . # Složka, která bude nasazena
+          branch: gh-pages # Větev, kam bude nasazeno
+          clean: true # Vyčistí cílovou větev před nasazením
+          single-commit: true # Použije jeden commit místo historie

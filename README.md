@@ -57,10 +57,51 @@ const CONFIG = {
 };
 ```
 
+### Nasazení na GitHub Pages s GitHub Actions
+
+Tento projekt používá GitHub Actions pro automatické nasazení na GitHub Pages včetně bezpečného přidání konfiguračního souboru. Pro nastavení postupujte takto:
+
+1. **Vytvořte šifrované tajemství v nastavení repozitáře:**
+   - Přejděte do nastavení vašeho repozitáře na GitHubu
+   - Klikněte na "Settings" > "Secrets and variables" > "Actions"
+   - Klikněte na "New repository secret"
+   - Vytvořte tajemství s názvem `CONFIG_JS` a obsahem vašeho souboru `config.js`:
+
+   ```javascript
+   // config.js - OBSAHUJE SKUTEČNÉ HODNOTY
+   const CONFIG = {
+     // API klíč z Google Cloud Console
+     API_KEY: 'vaše_skutečné_api_key',
+
+     // Client ID z Google Cloud Console
+     CLIENT_ID: 'vaše_skutečné_client_id',
+
+     // Seznam povolených emailů pro přístup k dokumentům
+     ALLOWED_EMAILS: ['vas@email.cz'],
+
+     // ID složek v Google Drive
+     FOLDERS: {
+       flights: 'id_složky_s_letenkami',
+       accommodation: 'id_složky_s_ubytováním',
+       tickets: 'id_složky_se_vstupenkami',
+       other: 'id_složky_s_ostatními_dokumenty'
+     }
+   };
+   ```
+
+2. **Povolte GitHub Actions a GitHub Pages:**
+   - Přejděte do nastavení vašeho repozitáře na GitHubu
+   - Klikněte na "Settings" > "Pages"
+   - V sekci "Source" vyberte "GitHub Actions"
+
+3. **Proveďte push do repozitáře:**
+   - GitHub Actions automaticky nasadí vaše stránky včetně souboru `config.js`
+   - Soubor `config.js` nebude viditelný v repozitáři, ale bude součástí nasazené stránky
+
 ### Bezpečnostní poznámky
 
 - Soubor `config.js` je přidán do `.gitignore`, aby nebyl nahrán do veřejného repozitáře
-- Při nasazení na GitHub Pages je potřeba ručně přidat soubor `config.js` do vašeho hostingu
+- Šifrovaná tajemství v GitHub Actions jsou bezpečně uložena a nejsou viditelná v logu
 - Pro zvýšení bezpečnosti doporučujeme:
   - Omezit API klíč pouze na vaši doménu v Google Cloud Console
   - Nastavit povolené JavaScript origin URL pro OAuth Client ID
